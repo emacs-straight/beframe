@@ -6,7 +6,7 @@
 ;; Maintainer: Protesilaos Stavrou General Issues <~protesilaos/general-issues@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/beframe
 ;; Mailing-List: https://lists.sr.ht/~protesilaos/general-issues
-;; Version: 0.1.3
+;; Version: 0.1.7
 ;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -29,7 +29,7 @@
 ;; `beframe' enables a frame-oriented Emacs workflow where each frame
 ;; has access to the list of buffers visited therein.  In the interest
 ;; of brevity, we call buffers that belong to frames "beframed".
-;; Beframing is achieved in two main ways:
+;; Beframing is achieved in three main ways:
 ;;
 ;; 1. By calling the command `beframe-switch-buffer'.  It is like the
 ;;    standard `switch-to-buffer' except the list of candidates is
@@ -39,6 +39,12 @@
 ;;    `read-buffer-function' to one that filters buffers per frame.  As
 ;;    such, commands like `switch-to-buffer', `next-buffer', and
 ;;    `previous-buffer' automatically work in a beframed way.
+;;
+;; 3. The command `beframe-buffer-menu' produces a dedicated buffer with
+;;    a list of buffers for the current frame.  This is the counterpart
+;;    of `beframe-switch-buffer'.  When called with a prefix argument
+;;    (`C-u' with default key bindings), it prompts for a frame whose
+;;    buffers it will display.
 ;;
 ;; Producing multiple frames does not generate multiple buffer lists.
 ;; There still is only one global list of buffers.  Beframing them simply
@@ -197,9 +203,10 @@ With optional FRAME as an object that satisfies `framep', return
 the list of buffers that are used by FRAME.
 
 Include `beframe-global-buffers' in the list."
-  (delete-dups
-   (append (beframe--frame-buffers frame)
-           (beframe--global-buffers))))
+  (delq nil
+        (delete-dups
+         (append (beframe--frame-buffers frame)
+                 (beframe--global-buffers)))))
 
 (defun beframe--buffer-names (&optional frame)
   "Return list of names of `beframe--buffer-list' as strings.
@@ -218,7 +225,7 @@ it must satisfy `framep'."
     (when (consp buf)
       (setq b (car buf)))
     (unless (string-prefix-p " " b)
-      (seq-contains-p (beframe--buffer-names frame) b #'string-match-p))))
+      (seq-contains-p (beframe--buffer-names frame) b))))
 
 (defvar beframe-history nil
   "Minibuffer history of frame specific buffers.")
@@ -323,6 +330,41 @@ The window manager must permit such an operation.  See bug#61319:
   (select-frame-set-input-focus frame)
   (switch-to-buffer buffer))
 
+(defun beframe--list-buffers-noselect (&optional frame)
+  "Produce a buffer list of buffers for optional FRAME.
+When FRAME is nil, use the current one.
+
+This is a simplified variant of `list-buffers-noselect'."
+  (let* ((frame (if (framep frame) frame (selected-frame)))
+         (name (frame-parameter frame 'name))
+         (old-buf (current-buffer))
+         (buf (get-buffer-create (format "*Buffer List for %s*" name)))
+         (buffer-list (beframe--buffer-list frame)))
+    (with-current-buffer buf
+      (Buffer-menu-mode)
+      (setq-local Buffer-menu-files-only nil
+                  Buffer-menu-buffer-list buffer-list
+                  Buffer-menu-filter-predicate nil)
+      (list-buffers--refresh buffer-list old-buf)
+      (tabulated-list-print))
+    buf))
+
+;;;###autoload
+(defun beframe-buffer-menu (&optional frame)
+  "Produce a `buffer-menu' for the current FRAME.
+With FRAME as a prefix argument, prompt for a frame.  When called
+from Lisp, FRAME satisfies `framep'.
+
+The bespoke buffer menu is displayed in a window using
+`display-buffer'.  Configure `display-buffer-alist' to control
+its placement and other parameters."
+  (interactive
+   (list
+    (when current-prefix-arg
+      (beframe--frame-object (beframe--frame-prompt)))))
+  (display-buffer (beframe--list-buffers-noselect frame))
+  (buffer-menu--display-help))
+
 ;;; Minor mode setup
 
 (defvar beframe--read-buffer-function nil
@@ -347,17 +389,23 @@ The window manager must permit such an operation.  See bug#61319:
     (remove-hook 'after-make-frame-functions #'beframe-create-scratch-buffer)
     (beframe--functions-in-frames :disable)))
 
-(defun beframe-create-scratch-buffer (name)
-  "Create scratch buffer in `initial-major-mode' for frame with NAME.
-NAME is either a string or a frame object (per `framep')."
-  (let* ((name (if (framep name) (frame-parameter name 'name) name))
+(defun beframe-create-scratch-buffer (frame)
+  "Create scratch buffer in `initial-major-mode' for FRAME."
+  (let* ((name (frame-parameter frame 'name))
          (buf (get-buffer-create (format "*scratch for %s*" name))))
     (with-current-buffer buf
       (funcall initial-major-mode)
+      (when (zerop (buffer-size))
+        (insert initial-scratch-message))
       (add-hook 'delete-frame-functions
                 (lambda (_frame)
                   (when beframe-kill-frame-scratch-buffer
-                    (kill-buffer buf)))))))
+                    (kill-buffer buf)))))
+    (let* ((frame-bufs (beframe--buffer-list frame))
+           (frame-bufs-with-buf (push buf frame-bufs)))
+      (modify-frame-parameters
+       frame
+       `((buffer-list . ,frame-bufs-with-buf))))))
 
 (defun beframe-rename-frame (frame)
   "Rename FRAME per `beframe-rename-function'."
@@ -371,15 +419,15 @@ NAME is either a string or a frame object (per `framep')."
     (t
      default-directory))))
 
-(defun beframe--frame-parameter-p (buf)
+(defun beframe--frame-buffer-p (buf &optional frame)
   "Return non-nil if BUF belongs to the current frame.
-BUF is a buffer object among `beframe--buffer-list'."
-  (memq buf (beframe--buffer-list)))
+Use optional FRAME to test if BUF belongs to it."
+  (memq buf (beframe--buffer-list frame)))
 
 (defun beframe--frame-predicate (&optional frame)
   "Set FRAME `buffer-predicate' parameter.
 If FRAME is nil, use the current frame."
-  (set-frame-parameter frame 'buffer-predicate #'beframe--frame-parameter-p))
+  (set-frame-parameter frame 'buffer-predicate #'beframe--frame-buffer-p))
 
 (defun beframe--with-other-frame (&rest app)
   "Apply APP with `other-frame-prefix'.
