@@ -6,7 +6,7 @@
 ;; Maintainer: Protesilaos Stavrou General Issues <~protesilaos/general-issues@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/beframe
 ;; Mailing-List: https://lists.sr.ht/~protesilaos/general-issues
-;; Version: 0.1.7
+;; Version: 0.1.8
 ;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -398,26 +398,82 @@ its placement and other parameters."
       (when (zerop (buffer-size))
         (insert initial-scratch-message))
       (add-hook 'delete-frame-functions
-                (lambda (_frame)
-                  (when beframe-kill-frame-scratch-buffer
+                (lambda (frame)
+                  (when (and beframe-kill-frame-scratch-buffer
+                             (null frame))
                     (kill-buffer buf)))))
     (let* ((frame-bufs (beframe--buffer-list frame))
-           (frame-bufs-with-buf (push buf frame-bufs)))
+           (frame-bufs-with-buf (append frame-bufs (list buf))))
       (modify-frame-parameters
        frame
        `((buffer-list . ,frame-bufs-with-buf))))))
 
-(defun beframe-rename-frame (frame)
-  "Rename FRAME per `beframe-rename-function'."
-  (select-frame frame)
-  (set-frame-name
-   (cond
-    ((and (not (minibufferp)) (buffer-file-name))
-     (format "%s  %s" (buffer-name) default-directory))
-    ((not (minibufferp))
-     (buffer-name))
-    (t
-     default-directory))))
+(defvar beframe--rename-frame-history nil
+  "Minibuffer history for `beframe-rename-frame'.")
+
+;; (defun beframe--rename-scratch-buffer (frame name)
+;;   "Rename the scratch buffer associated with FRAME according to NAME."
+;;   (when-let* ((buf (get-buffer (format "*scratch for %s*" frame)))
+;;               ((member (format "*scratch for %s*" frame) (beframe--buffer-list))))
+;;     (with-current-buffer buf
+;;       (rename-buffer (format "*scratch for %s*" name)))))
+
+(defun beframe--infer-frame-name (frame name)
+  "Infer a suitable name for FRAME with given NAME.
+See `beframe-rename-frame'."
+  (let* ((buffer (car (frame-parameter frame 'buffer-list)))
+         (file-name (when (bufferp buffer)
+                      (buffer-file-name buffer)))
+         (buf-name (buffer-name buffer))
+         (dir (with-current-buffer buffer
+                default-directory)))
+    (cond
+     ((and name (stringp name))
+      name)
+     ((and (not (minibufferp)) file-name)
+      (format "%s  %s" buf-name dir))
+     ((not (minibufferp))
+      buf-name)
+     (t
+      dir))))
+
+;;;###autoload
+(defun beframe-rename-frame (frame &optional name)
+  "Rename FRAME per `beframe-rename-function'.
+
+When called interactively, prompt for FRAME.  Else accept FRAME
+if it is an object that satisfies `framep'.
+
+With optional NAME as a string, use it to name the given FRAME.
+When called interactively, prompt for NAME when a prefix argument
+is given.
+
+With no NAME argument try to infer a name based on the following:
+
+- If the current window has a buffer that visits a file, name the
+  FRAME after the file's name and its `default-directory'.
+
+- If the current window has a non-file-visiting buffer, use the
+  `buffer-name' as the FRAME name.
+
+- Else use the `default-directory'.
+
+Remember that this function doubles as an example for
+`beframe-rename-function': copy it and modify it accordingly."
+  (interactive
+   (let ((select-frame (beframe--frame-prompt)))
+     (list
+      (beframe--frame-object select-frame)
+      (when current-prefix-arg
+        (read-string
+         (format "Rename the frame now called `%s' to: "
+                 select-frame)
+         nil 'beframe--rename-frame-history select-frame)))))
+  ;; (when name
+  ;;   (beframe--rename-scratch-buffer frame name))
+  (modify-frame-parameters
+   frame
+   (list (cons 'name (beframe--infer-frame-name frame name)))))
 
 (defun beframe--frame-buffer-p (buf &optional frame)
   "Return non-nil if BUF belongs to the current frame.
