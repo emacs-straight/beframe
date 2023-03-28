@@ -6,7 +6,7 @@
 ;; Maintainer: Protesilaos Stavrou General Issues <~protesilaos/general-issues@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/beframe
 ;; Mailing-List: https://lists.sr.ht/~protesilaos/general-issues
-;; Version: 0.1.11
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -29,98 +29,9 @@
 ;; `beframe' enables a frame-oriented Emacs workflow where each frame
 ;; has access to the list of buffers visited therein.  In the interest
 ;; of brevity, we call buffers that belong to frames "beframed".
-;; Beframing is achieved in three main ways:
 ;;
-;; 1. By calling the command `beframe-switch-buffer'.  It is like the
-;;    standard `switch-to-buffer' except the list of candidates is
-;;    limited to those that the current frame knows about.
-;;
-;; 2. By enabling the global minor mode `beframe-mode'.  It sets the
-;;    `read-buffer-function' to one that filters buffers per frame.  As
-;;    such, commands like `switch-to-buffer', `next-buffer', and
-;;    `previous-buffer' automatically work in a beframed way.
-;;
-;; 3. The command `beframe-buffer-menu' produces a dedicated buffer with
-;;    a list of buffers for the current frame.  This is the counterpart
-;;    of `beframe-switch-buffer'.  When called with a prefix argument
-;;    (`C-u' with default key bindings), it prompts for a frame whose
-;;    buffers it will display.
-;;
-;; Producing multiple frames does not generate multiple buffer lists.
-;; There still is only one global list of buffers.  Beframing them simply
-;; filters the list.
-;;
-;; The user option `beframe-global-buffers' contains a list of strings
-;; that represent buffers names.  Those buffers are never beframed and
-;; are available in all frames.  The default value contains the buffers
-;; `*scratch*', `*Messages*', and `*Backtrace*'.
-;;
-;; The user option `beframe-create-frame-scratch-buffer' allows
-;; `beframe-mode' to create a frame-specific scratch buffer that runs
-;; the `initial-major-mode'.  This is done upon the creation of a new
-;; frame and the scratch buffer is named after the frame it belongs
-;; to.  For example, if the frame is called `modus-themes', the
-;; corresponding scratch buffer is `*scratch for modus-themes*'.  Set
-;; this user option to `nil' to disable the creation of such scratch
-;; buffers.
-;;
-;; The user option `beframe-kill-frame-scratch-buffer' is the
-;; counterpart of `beframe-create-frame-scratch-buffer'.  It kills the
-;; frame-specific scratch buffer after the frame is deleted.  Set this
-;; user option to `nil' to disable the killing of such buffers.
-;;
-;; The command `beframe-assume-frame-buffers' (alias
-;; `beframe-add-frame-buffers') prompts for a frame and then copies
-;; its buffer list into the current frame.
-;;
-;; The command `beframe-unassume-frame-buffers' (alias
-;; `beframe-remove-frame-buffers') prompts for a frame and then
-;; removes its buffer list from the current frame.
-;;
-;; The `beframe-mode' does the following:
-;;
-;; - Sets the value of `read-buffer-function' to a function that
-;;   beframes all commands that read that variable.  This includes the
-;;   likes of `switch-to-buffer', `next-buffer', and `previous-buffer'.
-;;
-;; - Add a filter to newly created frames so that their
-;;   `buffer-predicate' parameter beframes buffers.
-;;
-;; - Renames newly created frames so that they have a potentially more
-;;   meaningful title.  The user option `beframe-rename-function'
-;;   specifies the function that handles this process.  When its value
-;;   is nil, no renaming is performed.
-;;
-;; - When the user option `beframe-functions-in-frames' contains a list
-;;   of functions, it makes them run with `other-frame-prefix', meaning
-;;   that they are called in a new frame.  The default value of that
-;;   user option affects the `project.el' project-switching selection:
-;;   the new project buffer appears in its own frame and, thus, becomes
-;;   part of a beframed list of buffers, isolated from all other frames.
-;;
-;; - Handles the creation and deletion of frame-specific scratch
-;;   buffers,per the user options `beframe-create-frame-scratch-buffer',
-;;   `beframe-kill-frame-scratch-buffer'.
-;;
-;; Development note: `beframe' is in its early days.  The minor mode may
-;; be revised to have more features and/or greater flexibility.
-;;
-;; The `consult' package by Daniel Mendler (also known as @minad)
-;; provides commands that extend the functionality of the generic
-;; minibuffer.  Among them is `consult-buffer'.  With that command the
-;; user can search for buffers, recent files, and bookmarks, among
-;; others.
-;;
-;; `consult-buffer' displays a global list of buffers and is never
-;; beframed.  This is done by design.  Instead of forcing it to only show
-;; beframed buffers, we get the best of both worlds: (i) a convenient way
-;; to access the global list of buffers and (ii) a new entry to the
-;; `consult-buffer-sources' that registers beframed buffers as their own
-;; group.  Users can narrow directly to this group by typing `F' followed
-;; by `SPC'.
-;;
-;; Backronym: Buffers Encapsulated in Frames Realise Advanced
-;; Management of Emacs.
+;; Read the official manual for detailed documentation:
+;; <https://protesilaos.com/emacs/beframe>.
 
 ;;; Code:
 
@@ -224,6 +135,16 @@ Include `beframe-global-buffers' in the list."
                   (append (beframe--frame-buffers frame)
                           (beframe--global-buffers))))))
 
+(defun beframe--buffer-list-consolidated ()
+  "Return list of buffers from all frames.
+This is the same as the output of the `buffer-list' function
+minus all the internal buffers."
+  (seq-filter
+   (lambda (buf)
+     (and (bufferp buf)
+          (not (string-prefix-p " " (buffer-name buf)))))
+   (buffer-list)))
+
 (define-obsolete-function-alias
   'beframe--buffer-list
   'beframe-buffer-list
@@ -238,6 +159,13 @@ more information."
    (lambda (buf)
      (buffer-name buf))
    (beframe-buffer-list frame :sort sort)))
+
+(defun beframe--buffer-names-consolidated ()
+  "Return list of names of all buffers as strings."
+  (mapcar
+   (lambda (buf)
+     (buffer-name buf))
+   (beframe--buffer-list-consolidated)))
 
 (define-obsolete-function-alias
   'beframe--buffer-names
@@ -400,19 +328,42 @@ its placement and other parameters."
       (beframe--frame-object (beframe--frame-prompt)))))
   (display-buffer (beframe-list-buffers-noselect frame :sort sort)))
 
+(defun beframe--assume (buffers)
+  "Unassume BUFFERS from current frame.
+BUFFERS is a list of buffer objects.  If BUFFERS satisfies
+`framep', then the list of buffers is that of the corresponding
+frame object (per `beframe-buffer-list')."
+  (let ((buffer-list
+         (delete-dups
+          (append
+           (if (framep buffers)
+               (beframe-buffer-list buffers)
+             buffers)
+           (beframe-buffer-list)))))
+    (modify-frame-parameters nil `((buffer-list . ,buffer-list)))))
+
+(defun beframe--unassume (buffers)
+  "Unassume BUFFERS from current frame.
+BUFFERS is a list of buffer objects.  If BUFFERS satisfies
+`framep', then the list of buffers is that of the corresponding
+frame object (per `beframe-buffer-list')."
+  (let ((buffer-list
+         (seq-filter
+          (lambda (buf)
+            (not (member buf (if (framep buffers) (beframe-buffer-list buffers) buffers))))
+          (beframe-buffer-list))))
+    (modify-frame-parameters nil `((buffer-list . ,buffer-list)))))
+
 ;;;###autoload
 (defun beframe-assume-frame-buffers (frame)
   "Assume FRAME buffer list, copying it into current buffer list.
 When called interactively, prompt for FRAME using completion.
 Else FRAME must satisfy `framep'.
 
-Also see `beframe-unassume-frame-buffers'."
+Also see `beframe-unassume-frame-buffers',
+`beframe-assume-buffers', `beframe-unassume-buffers'."
   (interactive (list (beframe--frame-object (beframe--frame-prompt))))
-  (let* ((other-buffer-list (beframe-buffer-list frame))
-         (buffers (delete-dups (append other-buffer-list (beframe-buffer-list)))))
-    (modify-frame-parameters
-     nil
-     `((buffer-list . ,buffers)))))
+  (beframe--assume frame))
 
 (defalias 'beframe-add-frame-buffers 'beframe-assume-frame-buffers
   "Alias of `beframe-assume-frame-buffers' command.")
@@ -423,23 +374,105 @@ Also see `beframe-unassume-frame-buffers'."
 When called interactively, prompt for FRAME using completion.
 Else FRAME must satisfy `framep'.
 
-Also see `beframe-assume-frame-buffers'."
+Also see `beframe-assume-frame-buffers',
+`beframe-assume-buffers', `beframe-unassume-buffers'."
   (interactive (list (beframe--frame-object (beframe--frame-prompt))))
-  (let* ((other-buffer-list (beframe-buffer-list frame))
-         (new-buffer-list
-          (seq-filter
-           (lambda (buf)
-             (not (member buf other-buffer-list)))
-           (beframe-buffer-list))))
-    (modify-frame-parameters
-     nil
-     `((buffer-list . ,new-buffer-list)))))
+  (beframe--unassume frame))
 
 (defalias 'beframe-remove-frame-buffers 'beframe-unassume-frame-buffers
   "Alias of `beframe-unassume-frame-buffers' command.")
 
-;; TODO 2023-03-02: Define commands to `completing-read-multiple'
-;; assume/unassume buffers.
+(defun beframe--buffers-name-to-objects (buffers)
+  "Convert list of named BUFFERS to their corresponding objects."
+  (mapcar
+   (lambda (buf)
+     (get-buffer buf))
+   buffers))
+
+(defun beframe--buffer-list-prompt-crm (&optional frame)
+  "Select one or more buffers in FRAME separated by `crm-separator'.
+Optional FRAME argument is an object that satisfies `framep'.  If
+FRAME is nil, the current frame is used.  If FRAME is non-nil but
+not a frame object, treat it as a flag for the consolidated
+buffer list (buffers from all frames)."
+  (completing-read-multiple
+   "Select buffers: "
+   (cond
+    ((framep frame)
+     (beframe-buffer-names frame))
+    (frame
+     (beframe--buffer-names-consolidated))
+    (t (beframe-buffer-names)))
+   nil
+   :require-match))
+
+;;;###autoload
+(defun beframe-assume-buffers (buffers)
+  "Assume BUFFERS from a frame into the current buffer list.
+
+In interactive use, BUFFERS is determined with a prompt that is
+powered by `completing-read-multiple'.  Multiple candidates can
+be selected, each separated by the `crm-separator' (typically a
+comma).
+
+Also see `beframe-assume-frame-buffers',
+`beframe-unassume-buffers', `beframe-unassume-frame-buffers'."
+  (interactive
+   (list
+    (beframe--buffers-name-to-objects
+     (beframe--buffer-list-prompt-crm
+      (beframe--frame-object
+       (beframe--frame-prompt))))))
+  (beframe--assume buffers))
+
+(defalias 'beframe-add-buffers 'beframe-assume-buffers
+  "Alias of `beframe-assume-buffers' command.")
+
+;;;###autoload
+(defun beframe-assume-buffers-all-frames ()
+  "Like `beframe-assume-buffers' but for the consolidated buffer list (all frames)."
+  (declare (interactive-only t))
+  (interactive)
+  (beframe--assume
+   (beframe--buffers-name-to-objects
+    (beframe--buffer-list-prompt-crm
+     :all-frames))))
+
+;;;###autoload
+(defun beframe-unassume-buffers (buffers)
+  "Unassume BUFFERS from the current frame's buffer list.
+
+In interactive use, BUFFERS is determined with a prompt that is
+powered by `completing-read-multiple'.  Multiple candidates can
+be selected, each separated by the `crm-separator' (typically a
+comma).
+
+Also see `beframe-assume-frame-buffers',
+`beframe-assume-buffers', `beframe-unassume-frame-buffers'."
+  (interactive
+   (list
+    (beframe--buffers-name-to-objects
+     (beframe--buffer-list-prompt-crm))))
+  (beframe--unassume buffers))
+
+(defalias 'beframe-remove-buffers 'beframe-unassume-buffers
+  "Alias of `beframe-unassume-buffers' command.")
+
+;;;###autoload
+(defun beframe-assume-all-buffers-no-prompts ()
+  "Assume the consolidated buffer list (all frames)."
+  (declare (interactive-only t))
+  (interactive)
+  (beframe--assume (beframe--buffer-list-consolidated)))
+
+;;;###autoload
+(defun beframe-unassume-all-buffers-no-prompts ()
+  "Unassume the consolidated buffer list (all frames).
+Keep only the `beframe-global-buffers'."
+  (declare (interactive-only t))
+  (interactive)
+  (beframe--unassume (beframe--buffer-list-consolidated))
+  (beframe--assume (beframe--global-buffers)))
 
 ;;; Minor mode setup
 
