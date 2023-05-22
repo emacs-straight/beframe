@@ -6,7 +6,7 @@
 ;; Maintainer: Protesilaos Stavrou General Issues <~protesilaos/general-issues@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/beframe
 ;; Mailing-List: https://lists.sr.ht/~protesilaos/general-issues
-;; Version: 0.2.0
+;; Version: 0.3.0
 ;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -259,7 +259,9 @@ Either bind this command to a key as an alternative to
 `beframe-mode' which makes all buffer prompts limit the
 candidates to those that belong to the selected frame.
 
-Also see `beframe-switch-buffer-in-frame'."
+Also see the other Beframe commands:
+
+\\{beframe-prefix-map}"
   (interactive (list (beframe--buffer-prompt)))
   (switch-to-buffer buffer))
 
@@ -321,7 +323,11 @@ sorting function—see `beframe-buffer-list' for more information.
 
 The bespoke buffer menu is displayed in a window using
 `display-buffer'.  Configure `display-buffer-alist' to control
-its placement and other parameters."
+its placement and other parameters.
+
+Also see the other Beframe commands:
+
+\\{beframe-prefix-map}"
   (interactive
    (list
     (when current-prefix-arg
@@ -360,13 +366,16 @@ frame object (per `beframe-buffer-list')."
 When called interactively, prompt for FRAME using completion.
 Else FRAME must satisfy `framep'.
 
-Also see `beframe-unassume-frame-buffers',
-`beframe-assume-buffers', `beframe-unassume-buffers'."
+Also see the other Beframe commands:
+
+\\{beframe-prefix-map}"
   (interactive (list (beframe--frame-object (beframe--frame-prompt))))
   (beframe--assume frame))
 
-(defalias 'beframe-add-frame-buffers 'beframe-assume-frame-buffers
-  "Alias of `beframe-assume-frame-buffers' command.")
+(make-obsolete
+ 'beframe-add-frame-buffers
+ 'beframe-assume-frame-buffers
+ "0.3.0")
 
 ;;;###autoload
 (defun beframe-unassume-frame-buffers (frame)
@@ -374,13 +383,16 @@ Also see `beframe-unassume-frame-buffers',
 When called interactively, prompt for FRAME using completion.
 Else FRAME must satisfy `framep'.
 
-Also see `beframe-assume-frame-buffers',
-`beframe-assume-buffers', `beframe-unassume-buffers'."
+Also see the other Beframe commands:
+
+\\{beframe-prefix-map}"
   (interactive (list (beframe--frame-object (beframe--frame-prompt))))
   (beframe--unassume frame))
 
-(defalias 'beframe-remove-frame-buffers 'beframe-unassume-frame-buffers
-  "Alias of `beframe-unassume-frame-buffers' command.")
+(make-obsolete
+ 'beframe-remove-frame-buffers
+ 'beframe-unassume-frame-buffers
+ "0.3.0")
 
 (defun beframe--buffers-name-to-objects (buffers)
   "Convert list of named BUFFERS to their corresponding objects."
@@ -406,17 +418,23 @@ buffer list (buffers from all frames)."
    nil
    :require-match))
 
+(define-obsolete-function-alias
+  'beframe-assume-buffers
+  'beframe-assume-frame-buffers-selectively
+  "0.3.0")
+
 ;;;###autoload
-(defun beframe-assume-buffers (buffers)
-  "Assume BUFFERS from a frame into the current buffer list.
+(defun beframe-assume-frame-buffers-selectively (buffers)
+  "Assume BUFFERS from a selected frame into the current buffer list.
 
-In interactive use, BUFFERS is determined with a prompt that is
-powered by `completing-read-multiple'.  Multiple candidates can
-be selected, each separated by the `crm-separator' (typically a
-comma).
+In interactive use, select a frame and then use
+`completing-read-multiple' to pick the list of BUFFERS.  Multiple
+candidates can be selected, each separated by the
+`crm-separator' (typically a comma).
 
-Also see `beframe-assume-frame-buffers',
-`beframe-unassume-buffers', `beframe-unassume-frame-buffers'."
+Also see the other Beframe commands:
+
+\\{beframe-prefix-map}"
   (interactive
    (list
     (beframe--buffers-name-to-objects
@@ -425,12 +443,19 @@ Also see `beframe-assume-frame-buffers',
        (beframe--frame-prompt))))))
   (beframe--assume buffers))
 
-(defalias 'beframe-add-buffers 'beframe-assume-buffers
-  "Alias of `beframe-assume-buffers' command.")
+(make-obsolete
+ 'beframe-add-buffers
+ 'beframe-assume-frame-buffers-selectively
+ "0.3.0")
+
+(define-obsolete-function-alias
+  'beframe-assume-buffers-all-frames
+  'beframe-assume-buffers-selectively-all-frames
+  "0.3.0")
 
 ;;;###autoload
-(defun beframe-assume-buffers-all-frames ()
-  "Like `beframe-assume-buffers' but for the consolidated buffer list (all frames)."
+(defun beframe-assume-buffers-selectively-all-frames ()
+  "Like `beframe-assume-frame-buffers-selectively' but for all frames."
   (declare (interactive-only t))
   (interactive)
   (beframe--assume
@@ -438,25 +463,32 @@ Also see `beframe-assume-frame-buffers',
     (beframe--buffer-list-prompt-crm
      :all-frames))))
 
+(define-obsolete-function-alias
+  'beframe-unassume-buffers
+  'beframe-unassume-current-frame-buffers-selectively
+  "0.3.0")
+
 ;;;###autoload
-(defun beframe-unassume-buffers (buffers)
+(defun beframe-unassume-current-frame-buffers-selectively (buffers)
   "Unassume BUFFERS from the current frame's buffer list.
 
-In interactive use, BUFFERS is determined with a prompt that is
-powered by `completing-read-multiple'.  Multiple candidates can
-be selected, each separated by the `crm-separator' (typically a
-comma).
+In interactive use, call `completing-read-multiple' to pick the
+list of BUFFERS.  Multiple candidates can be selected, each
+separated by the `crm-separator' (typically a comma).
 
-Also see `beframe-assume-frame-buffers',
-`beframe-assume-buffers', `beframe-unassume-frame-buffers'."
+Also see the other Beframe commands:
+
+\\{beframe-prefix-map}"
   (interactive
    (list
     (beframe--buffers-name-to-objects
      (beframe--buffer-list-prompt-crm))))
   (beframe--unassume buffers))
 
-(defalias 'beframe-remove-buffers 'beframe-unassume-buffers
-  "Alias of `beframe-unassume-buffers' command.")
+(make-obsolete
+ 'beframe-remove-buffers
+ 'beframe-unassume-current-frame-buffers-selectively
+ "0.3.0")
 
 ;;;###autoload
 (defun beframe-assume-all-buffers-no-prompts ()
@@ -468,7 +500,11 @@ Also see `beframe-assume-frame-buffers',
 ;;;###autoload
 (defun beframe-unassume-all-buffers-no-prompts ()
   "Unassume the consolidated buffer list (all frames).
-Keep only the `beframe-global-buffers'."
+Keep only the `beframe-global-buffers'.
+
+Also see the other Beframe commands:
+
+\\{beframe-prefix-map}"
   (declare (interactive-only t))
   (interactive)
   (beframe--unassume (beframe--buffer-list-consolidated))
@@ -479,9 +515,27 @@ Keep only the `beframe-global-buffers'."
 (defvar beframe--read-buffer-function nil
   "Last value of `read-buffer-function'.")
 
+(defvar beframe-prefix-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "b") #'beframe-switch-buffer)
+    (define-key map (kbd "m") #'beframe-buffer-menu)
+    (define-key map (kbd "a f") #'beframe-assume-frame-buffers-selectively)
+    (define-key map (kbd "a F") #'beframe-assume-frame-buffers)
+    (define-key map (kbd "a a") #'beframe-assume-buffers-selectively-all-frames)
+    (define-key map (kbd "a A") #'beframe-assume-all-buffers-no-prompts)
+    (define-key map (kbd "u f") #'beframe-unassume-current-frame-buffers-selectively)
+    (define-key map (kbd "a F") #'beframe-unassume-frame-buffers)
+    (define-key map (kbd "u U") #'beframe-unassume-all-buffers-no-prompts)
+    map)
+  "Keymap with Beframe commands.
+Meant to be assigned to a prefix key, like this:
+
+    (define-key global-map (kbd \"C-c b\") beframe-prefix-map)")
+
 ;;;###autoload
 (define-minor-mode beframe-mode
-  "Make all buffer prompts limit candidates per frame."
+  "Make all buffer prompts limit candidates per frame.
+Also see the `beframe-prefix-map'."
   :global t
   (if beframe-mode
       (progn
@@ -614,16 +668,19 @@ With optional DISABLE remove the advice."
       (advice-add cmd :around #'beframe--with-other-frame)))))
 
 (defun beframe-buffer-sort-visibility (buffers)
-  "Sort the given BUFFERS by visibility.
-Concretely, this means this function will return a sequence that
-first lists hidden, then visible, and then the current buffer."
-  (let* ((current (current-buffer))
-         (bufs (seq-group-by
-                (lambda (buf)
-                  (cond ((eq buf current)                 :current)
-                        ((get-buffer-window buf 'visible) :visible)
-                        (t                                :hidden)))
-                buffers)))
+  "Group the given BUFFERS by visibility and sort them accordingly.
+Return a sequence that first lists hidden, then visible, and then
+the current buffer.
+
+This function can be used as the :sort key of
+`beframe-buffer-list' or `beframe-buffer-names'."
+  (let ((bufs (seq-group-by
+               (lambda (buf)
+                 (cond
+                  ((eq buf (current-buffer)) :current)
+                  ((get-buffer-window buf 'visible) :visible)
+                  (t :hidden)))
+               buffers)))
     (nconc (alist-get :hidden  bufs)
            (alist-get :visible bufs)
            (alist-get :current bufs))))
