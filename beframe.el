@@ -557,18 +557,12 @@ Also see the `beframe-prefix-map'."
       (progn
         (setq beframe--read-buffer-function read-buffer-function
               read-buffer-function #'beframe-read-buffer)
-        (add-hook 'after-make-frame-functions #'beframe-frame-predicate)
-        (add-hook 'after-make-frame-functions #'beframe-maybe-rename-frame)
-        (add-hook 'after-make-frame-functions #'beframe-create-scratch-buffer)
-        (add-hook 'after-make-frame-functions #'beframe-do-not-assume-last-selected-buffer)
+        (add-hook 'after-make-frame-functions #'beframe-setup-frame)
         (add-hook 'context-menu-functions #'beframe-context-menu)
         (beframe--functions-in-frames))
     (setq read-buffer-function beframe--read-buffer-function
           beframe--read-buffer-function nil)
-    (remove-hook 'after-make-frame-functions #'beframe-frame-predicate)
-    (remove-hook 'after-make-frame-functions #'beframe-maybe-rename-frame)
-    (remove-hook 'after-make-frame-functions #'beframe-create-scratch-buffer)
-    (remove-hook 'after-make-frame-functions #'beframe-do-not-assume-last-selected-buffer)
+    (remove-hook 'after-make-frame-functions #'beframe-setup-frame)
     (remove-hook 'context-menu-functions #'beframe-context-menu)
     (beframe--functions-in-frames :disable)))
 
@@ -603,13 +597,6 @@ Also see the `beframe-prefix-map'."
 ;;     (with-current-buffer buf
 ;;       (rename-buffer (format "*scratch for %s*" name)))))
 
-(defun beframe-get-fork-symbol ()
-  "Return the powerline fork symbol, if available, else the VC string."
-  (if-let ((character #xE0A0)
-           ((char-displayable-p character)))
-      (char-to-string character)
-    "VC"))
-
 (defvar project--list) ; from project.el
 
 (defun beframe-infer-frame-name (frame name)
@@ -621,13 +608,12 @@ See `beframe-rename-frame'."
          (dir (with-current-buffer buffer (or (vc-root-dir) default-directory)))
          (projectp (and (bound-and-true-p project--list)
                         (listp project--list)
-                        (member (list dir) project--list)))
-         (project-symbol (beframe-get-fork-symbol)))
+                        (member (list dir) project--list))))
     (cond
      ((and name (stringp name))
       name)
      ((and projectp buf-name)
-      (format "%s %s" project-symbol (file-name-nondirectory (directory-file-name dir))))
+      (format "%s" (file-name-nondirectory (directory-file-name dir))))
      ((and (not (minibufferp)) file-name)
       (format "%s %s" buf-name dir))
      ((not (minibufferp))
@@ -658,8 +644,7 @@ With no NAME argument try to infer a name based on the following:
 
 Remember that this function doubles as an example for
 `beframe-rename-function': copy it and modify it accordingly
-while also reviewing `beframe-infer-frame-name' and
-`beframe-get-fork-symbol'."
+while also reviewing `beframe-infer-frame-name'."
   (interactive
    (let ((select-frame (beframe--frame-prompt :force-even-if-one)))
      (list
@@ -681,6 +666,18 @@ FRAME and optional NAME arguments are passed to the
 `beframe-rename-function'."
   (when beframe-rename-function
     (funcall beframe-rename-function frame name)))
+
+(defun beframe-setup-frame (frame)
+  "Rename FRAME and create scratch buffer for it, if appropriate.
+Call the functions `beframe-frame-predicate',
+`beframe-do-not-assume-last-selected-buffer',
+`beframe-maybe-rename-frame', `beframe-create-scratch-buffer' in
+this order."
+  (dolist (fn '(beframe-frame-predicate
+                beframe-do-not-assume-last-selected-buffer
+                beframe-maybe-rename-frame
+                beframe-create-scratch-buffer))
+    (funcall fn frame)))
 
 (defun beframe--frame-buffer-p (buf &optional frame)
   "Return non-nil if BUF belongs to the current frame.
