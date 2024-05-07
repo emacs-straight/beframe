@@ -1,4 +1,4 @@
-This is dockpXr3L.info, produced by makeinfo version 6.8 from
+This is docVuoObf.info, produced by makeinfo version 6.8 from
 beframe.texi.
 
 Copyright (C) 2023 Free Software Foundation, Inc.
@@ -20,7 +20,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: dockpXr3L.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docVuoObf.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 beframe: isolate buffers per frame
 **********************************
@@ -44,11 +44,11 @@ customization options for the Emacs package called ‘beframe’ (or
 to it.
 
    The documentation furnished herein corresponds to stable version
-1.0.0, released on 2023-11-17.  Any reference to a newer feature which
+1.1.0, released on 2024-05-06.  Any reference to a newer feature which
 does not yet form part of the latest tagged commit, is explicitly marked
 as such.
 
-   Current development target is 1.1.0-dev.
+   Current development target is 1.2.0-dev.
 
    • Package name (GNU ELPA): ‘beframe’
    • Official manual: <https://protesilaos.com/emacs/beframe>
@@ -102,7 +102,7 @@ Indices
 
 
 
-File: dockpXr3L.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
+File: docVuoObf.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -134,15 +134,14 @@ There still is only one global list of buffers.  Beframing them simply
 filters the list.
 
    The user option ‘beframe-global-buffers’ contains a list of regular
-expressions that are matched against buffers names.  The matching
-buffers are never beframed and are available in all frames.  The default
-value contains the buffers ‘*scratch*’, ‘*Messages*’, and ‘*Backtrace*’
-(more preciselly, it matches the regular expressions ‘\\*scratch\\*’,
-‘\\*Messages\\*’ ‘\\*Backtrace\\*’).  If the value is ‘nil’, no buffer
-enjoys such special treatment: they all follow the beframing scheme of
-remaining associated with the frame that opened them.  [ The
-‘beframe-global-buffers’ is revised as part of 1.1.0-dev to take a list
-of regular expressions instead of literal strings.  ]
+expressions or major mode symbols that are matched against buffers.  The
+matching buffers are never beframed and are available in all frames.
+The default value contains the buffers ‘*scratch*’, ‘*Messages*’, and
+‘*Backtrace*’ (more preciselly, it matches the regular expressions
+‘\\*scratch\\*’, ‘\\*Messages\\*’ ‘\\*Backtrace\\*’).  If the value is
+‘nil’, no buffer enjoys such special treatment: they all follow the
+beframing scheme of remaining associated with the frame that opened
+them.
 
    The user option ‘beframe-create-frame-scratch-buffer’ allows
 ‘beframe-mode’ to create a frame-specific scratch buffer that runs the
@@ -158,7 +157,7 @@ frame-specific scratch buffer after the frame is deleted.  Set this user
 option to ‘nil’ to disable the killing of such buffers.
 
 
-File: dockpXr3L.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
+File: docVuoObf.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
 
 2 Assuming and unassuming buffers
 *********************************
@@ -176,7 +175,7 @@ new lists on demand.
 * Unassuming buffers::
 
 
-File: dockpXr3L.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
+File: docVuoObf.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
 
 2.1 Assuming buffers
 ====================
@@ -206,7 +205,7 @@ the current frame.
      assumes the consolidated buffer list.
 
 
-File: dockpXr3L.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
+File: docVuoObf.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
 
 2.2 Unassuming buffers
 ======================
@@ -230,7 +229,7 @@ the current frame.
      ‘beframe-global-buffers’.
 
 
-File: dockpXr3L.info,  Node: Features of beframe-mode,  Next: The Beframe keymap,  Prev: Assuming and unassuming buffers,  Up: Top
+File: docVuoObf.info,  Node: Features of beframe-mode,  Next: The Beframe keymap,  Prev: Assuming and unassuming buffers,  Up: Top
 
 3 Features of ‘beframe-mode’
 ****************************
@@ -267,22 +266,15 @@ use Beframe’s commands.  Those are available on demand (*note The
 Beframe keymap::).
 
 
-File: dockpXr3L.info,  Node: The Beframe keymap,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
+File: docVuoObf.info,  Node: The Beframe keymap,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
 
 4 The Beframe keymap
 ********************
 
-[ The definition of ‘beframe-prefix-map’ as a _command_ is part of
-1.1.0-dev.  In previous versions, the following code block was binding
-the variable of the key map to the key.  This meant that updating the
-key map required a revaluation of the key binding.  Whereas now updates
-to the key map apply immediately, due to the indirection we achieve by
-binding the symbol of the command.  ]
-
-   The ‘beframe-prefix-map’ defines key bindings for the Beframe
-commands documented herein.  We call it a prefix keymap because it is
-not available from anywhere unless the user attaches it to a key
-sequence.  For example:
+The ‘beframe-prefix-map’ defines key bindings for the Beframe commands
+documented herein.  We call it a prefix keymap because it is not
+available from anywhere unless the user attaches it to a key sequence.
+For example:
 
      (define-key global-map (kbd "C-c b") #'beframe-prefix-map)
 
@@ -295,7 +287,7 @@ Help buffer that links to all the available bindings).
 each other (*note Features of beframe-mode: Features of beframe-mode.).
 
 
-File: dockpXr3L.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap,  Up: Top
+File: docVuoObf.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap,  Up: Top
 
 5 Installation
 **************
@@ -306,7 +298,7 @@ File: dockpXr3L.info,  Node: Installation,  Next: Sample configuration,  Prev: T
 * Manual installation::
 
 
-File: dockpXr3L.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
+File: docVuoObf.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
 
 5.1 GNU ELPA package
 ====================
@@ -325,7 +317,7 @@ archive.  Read:
 <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>.
 
 
-File: dockpXr3L.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
+File: docVuoObf.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
 
 5.2 Manual installation
 =======================
@@ -352,7 +344,7 @@ following commands in a shell prompt:
    Everything is in place to set up the package.
 
 
-File: dockpXr3L.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
+File: docVuoObf.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
 
 6 Sample configuration
 **********************
@@ -374,7 +366,7 @@ File: dockpXr3L.info,  Node: Sample configuration,  Next: Acknowledgements,  Pre
 * Integration with Ibuffer::
 
 
-File: dockpXr3L.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
+File: docVuoObf.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
 
 6.1 Integration with Consult
 ============================
@@ -423,7 +415,7 @@ the first element of the list being the most recently selected buffer
 other than the current one.
 
 
-File: dockpXr3L.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
+File: docVuoObf.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
 
 6.2 Integration with Ibuffer
 ============================
@@ -457,7 +449,7 @@ works:
          (memq buf (beframe-buffer-list))))
 
 
-File: dockpXr3L.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
+File: docVuoObf.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
 
 7 Acknowledgements
 ******************
@@ -474,7 +466,7 @@ Ideas and/or user feedback
      Derek Passen, Karan Ahlawat, Karthik Chikmagalur.
 
 
-File: dockpXr3L.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
+File: docVuoObf.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
 
 8 GNU Free Documentation License
 ********************************
@@ -956,7 +948,7 @@ software license, such as the GNU General Public License, to permit
 their use in free software.
 
 
-File: dockpXr3L.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
+File: docVuoObf.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
 
 9 Indices
 *********
@@ -968,7 +960,7 @@ File: dockpXr3L.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up
 * Concept index::
 
 
-File: dockpXr3L.info,  Node: Function index,  Next: Variable index,  Up: Indices
+File: docVuoObf.info,  Node: Function index,  Next: Variable index,  Up: Indices
 
 9.1 Function index
 ==================
@@ -992,7 +984,7 @@ File: dockpXr3L.info,  Node: Function index,  Next: Variable index,  Up: Indices
 * beframe-unassume-frame-buffers:        Unassuming buffers.   (line  9)
 
 
-File: dockpXr3L.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
+File: docVuoObf.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
 
 9.2 Variable index
 ==================
@@ -1000,17 +992,17 @@ File: dockpXr3L.info,  Node: Variable index,  Next: Concept index,  Prev: Functi
  [index ]
 * Menu:
 
-* beframe-create-frame-scratch-buffer:   Overview.             (line 43)
+* beframe-create-frame-scratch-buffer:   Overview.             (line 42)
 * beframe-functions-in-frames:           Features of beframe-mode.
                                                                (line 20)
 * beframe-global-buffers:                Overview.             (line 32)
-* beframe-kill-frame-scratch-buffer:     Overview.             (line 51)
-* beframe-prefix-map:                    The Beframe keymap.   (line 13)
+* beframe-kill-frame-scratch-buffer:     Overview.             (line 50)
+* beframe-prefix-map:                    The Beframe keymap.   (line  6)
 * beframe-rename-function:               Features of beframe-mode.
                                                                (line 15)
 
 
-File: dockpXr3L.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
+File: docVuoObf.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 
 9.3 Concept index
 =================
@@ -1026,23 +1018,23 @@ File: dockpXr3L.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 Tag Table:
 Node: Top829
 Node: Overview3269
-Node: Assuming and unassuming buffers6158
-Node: Assuming buffers6670
-Node: Unassuming buffers7990
-Node: Features of beframe-mode8961
-Node: The Beframe keymap10665
-Node: Installation11941
-Node: GNU ELPA package12138
-Node: Manual installation12700
-Node: Sample configuration13473
-Node: Integration with Consult14055
-Node: Integration with Ibuffer16164
-Node: Acknowledgements17379
-Node: GNU Free Documentation License17816
-Node: Indices43159
-Node: Function index43335
-Node: Variable index44491
-Node: Concept index45230
+Node: Assuming and unassuming buffers6036
+Node: Assuming buffers6548
+Node: Unassuming buffers7868
+Node: Features of beframe-mode8839
+Node: The Beframe keymap10543
+Node: Installation11421
+Node: GNU ELPA package11618
+Node: Manual installation12180
+Node: Sample configuration12953
+Node: Integration with Consult13535
+Node: Integration with Ibuffer15644
+Node: Acknowledgements16859
+Node: GNU Free Documentation License17296
+Node: Indices42639
+Node: Function index42815
+Node: Variable index43971
+Node: Concept index44710
 
 End Tag Table
 
