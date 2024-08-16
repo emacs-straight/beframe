@@ -127,38 +127,47 @@ automatically, use `customize-set-variable' or `setopt' (Emacs
          (beframe--functions-in-frames))
   :type 'symbol)
 
-(defun beframe--frame-buffers (&optional frame)
-  "Produce list of buffers for either specified or current FRAME."
-  (seq-filter
-   (lambda (buf)
-     (and (bufferp buf)
-          (not (string-prefix-p " " (buffer-name buf)))))
-   (frame-parameter frame 'buffer-list)))
 
-(defun beframe--public-buffers ()
-  "Return list of buffers from all frames.
-This is the same as the output of the `buffer-list' function
-minus all the internal buffers."
-  (seq-filter
-   (lambda (buf)
-     (and (bufferp buf)
-          (not (string-prefix-p " " (buffer-name buf)))))
-   (buffer-list)))
+(defun beframe--remove-internal-buffers (buffers)
+  "Removes internal buffers from BUFFERS list."
+  (cl-flet ((beframe--filter-internal-p (buffer)
+              (string-prefix-p " " (buffer-name buffer))))
+    (seq-remove #'beframe--filter-internal-p buffers)))
+
+
+
+(defun beframe--get-buffers (&optional arg)
+  "Return list of buffers from different sources depending on ARG.
+
+The following values of ARG can be used:
+
+- \\='public\\=' to consider the return value of the `buffer-list'
+  function.
+
+- \\='global\\=' to consider the user-custom option in `beframe-global-buffers'
+
+- nil or a frame object satisfying `frame-live-p' to consider the
+  \\='buffer-list\\=' parameter of either `selected-frame' or the given object."
+  (pcase arg
+    ('public (beframe--remove-internal-buffers (buffer-list)))
+    ('global (beframe--global-buffers))
+    ((or (pred null) (pred frame-live-p))
+     (beframe--remove-internal-buffers (frame-parameter arg 'buffer-list)))
+    (_ (user-error "Wrong argument in `beframe--get-buffers' pcase"))))
+
 
 (defun beframe--global-buffers ()
   "Return list of `beframe-global-buffers' buffer objects."
-  (mapcan
-   (lambda (regexp-or-symbol)
-     (seq-filter
-      (lambda (buffer)
-        (when (or (and (stringp regexp-or-symbol)
-                       (string-match-p regexp-or-symbol (buffer-name buffer)))
-                  (and (symbolp regexp-or-symbol)
-                       (with-current-buffer buffer
-                         (derived-mode-p regexp-or-symbol))))
-          buffer))
-      (beframe--public-buffers)))
-   beframe-global-buffers))
+  (pcase-let* ((pub-buffs (beframe--get-buffers 'public))
+               (`(,str-re ,modes-lst)
+                (cl-loop for E in beframe-global-buffers
+                         if (stringp E) collect E into str
+                         else if (symbolp E) collect E into sym
+                         finally return (list (string-join str "\\|") sym))))
+    (cl-loop for b in pub-buffs
+             if (string-match-p str-re (buffer-name b)) collect b
+             else if (with-current-buffer b (derived-mode-p modes-lst))
+             collect b)))
 
 (cl-defun beframe-buffer-list (&optional frame &key sort)
   "Return list of buffers that are used by the current frame.
@@ -174,7 +183,7 @@ Include `beframe-global-buffers' in the list."
   (funcall (or sort #'identity)
            (delq nil
                  (delete-dups
-                  (append (beframe--frame-buffers frame)
+                  (append (beframe--get-buffers frame)
                           (beframe--global-buffers))))))
 
 (define-obsolete-function-alias
@@ -191,7 +200,7 @@ more information."
 
 (defun beframe--buffer-names-consolidated ()
   "Return list of names of all buffers as strings."
-  (mapcar #'buffer-name (beframe--public-buffers)))
+  (mapcar #'buffer-name (beframe--get-buffers 'public)))
 
 (define-obsolete-function-alias
   'beframe--buffer-names
@@ -526,7 +535,7 @@ Also see the other Beframe commands:
   "Assume the consolidated buffer list (all frames)."
   (declare (interactive-only t))
   (interactive)
-  (beframe--assume (beframe--public-buffers)))
+  (beframe--assume (beframe--get-buffers 'public)))
 
 ;;;###autoload
 (defun beframe-unassume-all-buffers-no-prompts ()
@@ -538,7 +547,7 @@ Also see the other Beframe commands:
 \\{beframe-prefix-map}"
   (declare (interactive-only t))
   (interactive)
-  (beframe--unassume (beframe--public-buffers))
+  (beframe--unassume (beframe--get-buffers 'public))
   (beframe--assume (beframe--global-buffers)))
 
 ;;; Minor mode setup
@@ -626,7 +635,9 @@ See `beframe-rename-frame'."
            (dir (with-current-buffer buffer (or (vc-root-dir) default-directory)))
            (projectp (and (bound-and-true-p project--list)
                           (listp project--list)
-                          (member (list dir) project--list))))
+                          (or
+                           (member (list dir) project--list)
+                           (member (list (abbreviate-file-name dir)) project--list)))))
       (cond
        ((and name (stringp name))
         name)
