@@ -127,34 +127,78 @@ automatically, use `customize-set-variable' or `setopt' (Emacs
          (beframe--functions-in-frames))
   :type 'symbol)
 
+(defcustom beframe-kill-buffers-no-confirm nil
+  "When non-nil, do not prompt for confirmation when killing buffers.
+This concerns the command `beframe-kill-buffers-matching-regexp'.
+
+If nil (the default), `beframe-kill-buffers-matching-regexp' asks for
+confirmation once and then proceeds to kill all the buffers it has found.
+
+Emacs may still prompt to confirm each action if the buffer is unsaved,
+has a running process, and the like."
+  :group 'beframe
+  :package-version '(beframe . "1.2.0")
+  :type 'boolean)
 
 (defun beframe--remove-internal-buffers (buffers)
-  "Removes internal buffers from BUFFERS list."
-  (cl-flet ((beframe--filter-internal-p (buffer)
-              (string-prefix-p " " (buffer-name buffer))))
-    (seq-remove #'beframe--filter-internal-p buffers)))
+  "Remove internal buffers from BUFFERS."
+  (seq-remove
+   (lambda (buffer)
+     (string-prefix-p " " (buffer-name buffer)))
+   buffers))
 
+(defun beframe--get-buffers-matching-regexp (regexp &optional match-mode-names no-internal-buffers)
+  "Return buffers whose name matches REGEXP.
+With optional MATCH-MODE-NAMES also return buffers whose major mode
+matches REGEXP.
 
+With optional NO-INTERNAL-BUFFERS, get the `buffer-list' filtered
+through `beframe--remove-internal-buffers'."
+  (let ((buffers (if no-internal-buffers
+                     (beframe--remove-internal-buffers (buffer-list))
+                   (buffer-list))))
+    (seq-filter
+     (lambda (buffer)
+       (if match-mode-names
+           (or (string-match-p regexp (buffer-name buffer))
+               (with-current-buffer buffer
+                 (string-match-p regexp (symbol-name major-mode))))
+         (string-match-p regexp (buffer-name buffer))))
+     buffers)))
 
 (defun beframe--get-buffers (&optional arg)
   "Return list of buffers from different sources depending on ARG.
 
 The following values of ARG can be used:
 
-- \\='public\\=' to consider the return value of the `buffer-list'
-  function.
+- A list of one to three elements that are passed to the function
+  `beframe--get-buffers-matching-regexp' (refer to its doc string from
+  the arguments).
 
-- \\='global\\=' to consider the user-custom option in `beframe-global-buffers'
+- A string, which is passed to `beframe--get-buffers-matching-regexp' as
+  the sole argument.
 
-- nil or a frame object satisfying `frame-live-p' to consider the
-  \\='buffer-list\\=' parameter of either `selected-frame' or the given object."
+- The symbol \\='public\\=' to filter the `buffer-list' through
+  `beframe--remove-internal-buffers'.
+
+- The symbol \\='global\\=' to get the return value of the function
+  `beframe--global-buffers', which reads the user option
+  `beframe-global-buffers'.
+
+- nil or a frame object satisfying `frame-live-p' to get the
+  \\='buffer-list\\=' parameter of either the `selected-frame' or the
+  given frame object, filtered through `beframe--remove-internal-buffers'."
   (pcase arg
+    ((or `(,regexp ,match-major-modes ,no-internal-buffers)
+         `(,regexp ,match-major-modes)
+         `(,regexp)
+         (and (pred stringp) `,regexp))
+     (beframe--get-buffers-matching-regexp regexp match-major-modes no-internal-buffers))
     ('public (beframe--remove-internal-buffers (buffer-list)))
     ('global (beframe--global-buffers))
     ((or (pred null) (pred frame-live-p))
      (beframe--remove-internal-buffers (frame-parameter arg 'buffer-list)))
     (_ (user-error "Wrong argument in `beframe--get-buffers' pcase"))))
-
 
 (defun beframe--global-buffers ()
   "Return list of `beframe-global-buffers' buffer objects."
@@ -259,13 +303,14 @@ frame name."
     (mapcar
      (lambda (frame)
        (let ((name (car frame))
-             (obj (cdr frame)))
+             (obj (cdr frame))
+             (selected-frame (selected-frame)))
          (cond
-          ((and (eq (selected-frame) obj)
+          ((and (eq selected-frame obj)
                 (string-prefix-p " " name))
            (setcar frame "Current frame")
            frame)
-          ((eq (selected-frame) obj)
+          ((eq selected-frame obj)
            (setcar frame (format "%s (Current frame)" name))
            frame)
           (t
@@ -382,26 +427,42 @@ Also see the other Beframe commands:
 BUFFERS is a list of buffer objects.  If BUFFERS satisfies
 `framep', then the list of buffers is that of the corresponding
 frame object (per `beframe-buffer-list')."
-  (let ((buffer-list
-         (delete-dups
-          (append
-           (if (framep buffers)
-               (beframe-buffer-list buffers)
-             buffers)
-           (beframe-buffer-list)))))
-    (modify-frame-parameters nil `((buffer-list . ,buffer-list)))))
+  (if-let ((frame-buffers (beframe--get-buffers))
+           (final-list (append
+                        (if (framep buffers)
+                            (beframe--get-buffers buffers)
+                          buffers)
+                        frame-buffers)))
+      (if-let ((assumed-buffers (seq-difference ; NOTE: the longer list must come first
+                                 (mapcar #'buffer-name final-list)
+                                 (mapcar #'buffer-name frame-buffers))))
+          (progn
+            (modify-frame-parameters nil `((buffer-list . ,(delete-dups final-list))))
+            (message "Assumed into frame: %s" assumed-buffers))
+        (message "Did not assume any buffers"))
+    (error "Could not determine how to assume `%s'" buffers)))
 
 (defun beframe--unassume (buffers)
   "Unassume BUFFERS from current frame.
 BUFFERS is a list of buffer objects.  If BUFFERS satisfies
 `framep', then the list of buffers is that of the corresponding
 frame object (per `beframe-buffer-list')."
-  (let ((buffer-list
-         (seq-filter
-          (lambda (buf)
-            (not (member buf (if (framep buffers) (beframe-buffer-list buffers) buffers))))
-          (beframe-buffer-list))))
-    (modify-frame-parameters nil `((buffer-list . ,buffer-list)))))
+  (if-let ((frame-buffers (beframe--get-buffers))
+           (new-buffers (if (framep buffers)
+                            (beframe--get-buffers buffers)
+                          buffers))
+           (final-list (seq-filter
+                        (lambda (buf)
+                          (not (member buf new-buffers)))
+                        frame-buffers)))
+      (if-let ((assumed-buffers (seq-difference ; NOTE: the longer list must come first
+                                 (mapcar #'buffer-name frame-buffers)
+                                 (mapcar #'buffer-name final-list))))
+          (progn
+            (modify-frame-parameters nil `((buffer-list . ,final-list)))
+            (message "Unassumed from frame: %s" assumed-buffers))
+        (message "Did not unassume any buffers"))
+    (error "Could not determine how to unassume `%s'" buffers)))
 
 ;;;###autoload
 (defun beframe-assume-frame-buffers (frame)
@@ -503,19 +564,6 @@ Also see the other Beframe commands:
     (beframe--buffer-list-prompt-crm
      :all-frames))))
 
-(defun beframe--get-buffers-matching-regexp (regexp &optional match-mode-names)
-  "Return buffers whose name matches REGEXP.
-With optional MATCH-MODE-NAMES also return buffers whose major mode
-matches REGEXP."
-  (seq-filter
-   (lambda (buffer)
-     (if match-mode-names
-         (or (string-match-p regexp (buffer-name buffer))
-             (with-current-buffer buffer
-               (string-match-p regexp (symbol-name major-mode))))
-       (string-match-p regexp (buffer-name buffer))))
-   (buffer-list)))
-
 (defvar beframe-buffers-matching-regexp-history nil
   "Minibuffer history of `beframe-buffers-matching-regexp-prompt'.")
 
@@ -536,10 +584,15 @@ Also see the other Beframe commands:
 
 \\{beframe-prefix-map}"
   (interactive
-   (list
-    (beframe-buffers-matching-regexp-prompt "Buffer names matching REGEXP")
-    current-prefix-arg))
-  (beframe--assume (beframe--get-buffers-matching-regexp regexp match-mode-names)))
+   (let ((arg current-prefix-arg))
+     (list
+      (beframe-buffers-matching-regexp-prompt
+       (if arg
+           "Buffer names matching REGEXP in the name or major mode"
+         "Buffer names matching REGEXP in the name")))))
+  (if-let ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
+      (beframe--assume buffers)
+    (user-error "No buffers match `%s'" regexp)))
 
 ;;;###autoload
 (defun beframe-unassume-buffers-matching-regexp-all-frames (regexp &optional match-mode-names)
@@ -551,10 +604,15 @@ Also see the other Beframe commands:
 
 \\{beframe-prefix-map}"
   (interactive
-   (list
-    (beframe-buffers-matching-regexp-prompt "Buffer names matching REGEXP")
-    current-prefix-arg))
-  (beframe--unassume (beframe--get-buffers-matching-regexp regexp match-mode-names)))
+   (let ((arg current-prefix-arg))
+     (list
+      (beframe-buffers-matching-regexp-prompt
+       (if arg
+           "Buffer names matching REGEXP in the name or major mode"
+         "Buffer names matching REGEXP in the name")))))
+  (if-let ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
+      (beframe--unassume buffers)
+    (user-error "No buffers match `%s'" regexp)))
 
 (define-obsolete-function-alias
   'beframe-unassume-buffers
@@ -603,6 +661,33 @@ Also see the other Beframe commands:
   (beframe--unassume (beframe--get-buffers 'public))
   (beframe--assume (beframe--global-buffers)))
 
+;;;###autoload
+(defun beframe-kill-buffers-matching-regexp (regexp &optional match-mode-names)
+  "Delete all buffers whose name matches REGEXP.
+With optional MATCH-MODE-NAMES delete buffers whose name or major mode
+matches REGEXP.
+
+Note that this operation applies to all frames, because buffers are
+shared by the Emacs session even though Beframe only exposes those that
+pertain to a given frame.
+
+Also see the other Beframe commands:
+
+\\{beframe-prefix-map}"
+  (interactive
+   (let ((arg current-prefix-arg))
+     (list
+      (beframe-buffers-matching-regexp-prompt
+       (if arg
+           "Delete buffers matching REGEXP in the name or major mode"
+         "Delete buffers matching REGEXP in the name"))
+      arg)))
+  (if-let ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
+      (when (or beframe-kill-buffers-no-confirm
+                (y-or-n-p (format "Kill %d buffers matching `%s'?" (length buffers) regexp)))
+        (mapc #'kill-buffer buffers))
+    (user-error "No buffers match `%s'" regexp)))
+
 ;;; Minor mode setup
 
 (defvar beframe--read-buffer-function nil
@@ -619,6 +704,7 @@ Meant to be assigned to a prefix key, like this:
 
 (define-key beframe-prefix-map (kbd "b") #'beframe-switch-buffer)
 (define-key beframe-prefix-map (kbd "m") #'beframe-buffer-menu)
+(define-key beframe-prefix-map (kbd "k") #'beframe-kill-buffers-matching-regexp)
 (define-key beframe-prefix-map (kbd "a f") #'beframe-assume-frame-buffers-selectively)
 (define-key beframe-prefix-map (kbd "a F") #'beframe-assume-frame-buffers)
 (define-key beframe-prefix-map (kbd "a a") #'beframe-assume-buffers-selectively-all-frames)
