@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://github.com/protesilaos/beframe
-;; Version: 1.1.1
+;; Version: 1.2.1
 ;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -422,47 +422,50 @@ Also see the other Beframe commands:
       (beframe--frame-object (beframe--frame-prompt)))))
   (display-buffer (beframe-list-buffers-noselect frame :sort sort)))
 
-(defun beframe--assume (buffers)
-  "Assume BUFFERS into current frame.
-BUFFERS is a list of buffer objects.  If BUFFERS satisfies
-`framep', then the list of buffers is that of the corresponding
-frame object (per `beframe-buffer-list')."
-  (if-let ((frame-buffers (beframe--get-buffers))
-           (final-list (append
-                        (if (framep buffers)
-                            (beframe--get-buffers buffers)
-                          buffers)
-                        frame-buffers)))
-      (if-let ((assumed-buffers (seq-difference ; NOTE: the longer list must come first
-                                 (mapcar #'buffer-name final-list)
-                                 (mapcar #'buffer-name frame-buffers))))
-          (progn
-            (modify-frame-parameters nil `((buffer-list . ,(delete-dups final-list))))
-            (message "Assumed into frame: %s" assumed-buffers))
-        (message "Did not assume any buffers"))
-    (error "Could not determine how to assume `%s'" buffers)))
+(defun beframe--get-longest-list-first (list-1 list-2)
+  "Return a cons cell of LIST-1 and LIST-2 with the longest first."
+  (let ((length-1 (length list-1))
+        (length-2 (length list-2)))
+    (if (> length-1 length-2)
+        (cons list-1 list-2)
+      (cons list-2 list-1))))
 
-(defun beframe--unassume (buffers)
-  "Unassume BUFFERS from current frame.
-BUFFERS is a list of buffer objects.  If BUFFERS satisfies
-`framep', then the list of buffers is that of the corresponding
-frame object (per `beframe-buffer-list')."
-  (if-let ((frame-buffers (beframe--get-buffers))
-           (new-buffers (if (framep buffers)
-                            (beframe--get-buffers buffers)
-                          buffers))
-           (final-list (seq-filter
-                        (lambda (buf)
-                          (not (member buf new-buffers)))
-                        frame-buffers)))
-      (if-let ((assumed-buffers (seq-difference ; NOTE: the longer list must come first
-                                 (mapcar #'buffer-name frame-buffers)
-                                 (mapcar #'buffer-name final-list))))
-          (progn
-            (modify-frame-parameters nil `((buffer-list . ,final-list)))
-            (message "Unassumed from frame: %s" assumed-buffers))
-        (message "Did not unassume any buffers"))
-    (error "Could not determine how to unassume `%s'" buffers)))
+(defun beframe--modify-buffer-list (operation buffers)
+  "Perform OPERATION to modify the current frame buffer list.
+
+OPERATION is a keyword to :assume or :unassume.  To assume is to include
+buffers into the buffer list.  To unassume is to remove them from the
+buffer list.
+
+BUFFERS is a list of buffer objects to be added or removed from the
+current frame buffer list.  If BUFFERS satisfies `framep', then the list
+of buffers is that of the corresponding frame object (per
+`beframe--get-buffers')."
+  (pcase-let* ((frame-buffers (beframe--get-buffers))
+               (new-buffers (if (framep buffers)
+                                (beframe--get-buffers buffers)
+                              buffers))
+               (`(,consolidated-buffers . ,action)
+                (pcase operation
+                  (:assume (cons (append new-buffers frame-buffers) "Assumed"))
+                  (:unassume (cons
+                              (seq-filter
+                               (lambda (buf)
+                                 (not (member buf new-buffers)))
+                               frame-buffers)
+                              "Unassumed"))
+                  (_ (error "`%s' is an unknown operation to modify frame buffers" operation)))))
+    (if-let ((lists (beframe--get-longest-list-first frame-buffers consolidated-buffers))
+             (difference (seq-difference
+                          (mapcar #'buffer-name (car lists))
+                          (mapcar #'buffer-name (cdr lists)))))
+        (progn
+          (modify-frame-parameters nil `((buffer-list . ,consolidated-buffers)))
+          (message "%s %s buffers: %s"
+                   (propertize action 'face 'error)
+                   (propertize (format "%s" (length difference)) 'face 'warning)
+                   (propertize (format "%s" difference) 'face 'success)))
+      (message "No change to the frame's buffer list"))))
 
 ;;;###autoload
 (defun beframe-assume-frame-buffers (frame)
@@ -474,7 +477,7 @@ Also see the other Beframe commands:
 
 \\{beframe-prefix-map}"
   (interactive (list (beframe--frame-object (beframe--frame-prompt))))
-  (beframe--assume frame))
+  (beframe--modify-buffer-list :assume frame))
 
 (make-obsolete
  'beframe-add-frame-buffers
@@ -491,7 +494,7 @@ Also see the other Beframe commands:
 
 \\{beframe-prefix-map}"
   (interactive (list (beframe--frame-object (beframe--frame-prompt))))
-  (beframe--unassume frame))
+  (beframe--modify-buffer-list :unassume frame))
 
 (make-obsolete
  'beframe-remove-frame-buffers
@@ -542,7 +545,7 @@ Also see the other Beframe commands:
      (beframe--buffer-list-prompt-crm
       (beframe--frame-object
        (beframe--frame-prompt))))))
-  (beframe--assume buffers))
+  (beframe--modify-buffer-list :assume buffers))
 
 (make-obsolete
  'beframe-add-buffers
@@ -559,7 +562,8 @@ Also see the other Beframe commands:
   "Like `beframe-assume-frame-buffers-selectively' but for all frames."
   (declare (interactive-only t))
   (interactive)
-  (beframe--assume
+  (beframe--modify-buffer-list
+   :assume
    (beframe--buffers-name-to-objects
     (beframe--buffer-list-prompt-crm
      :all-frames))))
@@ -575,7 +579,7 @@ Also see the other Beframe commands:
      default 'beframe-buffers-matching-regexp-history)))
 
 ;;;###autoload
-(defun beframe-assume-buffers-matching-regexp-all-frames (regexp &optional match-mode-names)
+(defun beframe-assume-buffers-matching-regexp (regexp &optional match-mode-names)
   "Assume all buffers whose name matches REGEXP.
 With optional MATCH-MODE-NAMES return buffers whose name or major mode
 matches REGEXP.
@@ -591,11 +595,14 @@ Also see the other Beframe commands:
            "Buffer names matching REGEXP in the name or major mode"
          "Buffer names matching REGEXP in the name")))))
   (if-let ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
-      (beframe--assume buffers)
+      (beframe--modify-buffer-list :assume buffers)
     (user-error "No buffers match `%s'" regexp)))
 
+(defalias 'beframe-assume-buffers-matching-regexp 'beframe-assume-buffers-matching-regexp-all-frames
+  "Alias for `beframe-assume-buffers-matching-regexp'.")
+
 ;;;###autoload
-(defun beframe-unassume-buffers-matching-regexp-all-frames (regexp &optional match-mode-names)
+(defun beframe-unassume-buffers-matching-regexp (regexp &optional match-mode-names)
   "Unassume all buffers whose name matches REGEXP.
 With optional MATCH-MODE-NAMES return buffers whose name or major mode
 matches REGEXP.
@@ -611,8 +618,12 @@ Also see the other Beframe commands:
            "Buffer names matching REGEXP in the name or major mode"
          "Buffer names matching REGEXP in the name")))))
   (if-let ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
-      (beframe--unassume buffers)
+      (beframe--modify-buffer-list :unassume buffers)
     (user-error "No buffers match `%s'" regexp)))
+
+
+(defalias 'beframe-unassume-buffers-matching-regexp 'beframe-unassume-buffers-matching-regexp-all-frames
+  "Alias for `beframe-unassume-buffers-matching-regexp'.")
 
 (define-obsolete-function-alias
   'beframe-unassume-buffers
@@ -634,7 +645,7 @@ Also see the other Beframe commands:
    (list
     (beframe--buffers-name-to-objects
      (beframe--buffer-list-prompt-crm))))
-  (beframe--unassume buffers))
+  (beframe--modify-buffer-list :unassume buffers))
 
 (make-obsolete
  'beframe-remove-buffers
@@ -646,7 +657,7 @@ Also see the other Beframe commands:
   "Assume the consolidated buffer list (all frames)."
   (declare (interactive-only t))
   (interactive)
-  (beframe--assume (beframe--get-buffers 'public)))
+  (beframe--modify-buffer-list :assume (beframe--get-buffers 'public)))
 
 ;;;###autoload
 (defun beframe-unassume-all-buffers-no-prompts ()
@@ -658,8 +669,8 @@ Also see the other Beframe commands:
 \\{beframe-prefix-map}"
   (declare (interactive-only t))
   (interactive)
-  (beframe--unassume (beframe--get-buffers 'public))
-  (beframe--assume (beframe--global-buffers)))
+  (beframe--modify-buffer-list :unassume (beframe--get-buffers 'public))
+  (beframe--modify-buffer-list :assume (beframe--global-buffers)))
 
 ;;;###autoload
 (defun beframe-kill-buffers-matching-regexp (regexp &optional match-mode-names)
@@ -712,8 +723,8 @@ Meant to be assigned to a prefix key, like this:
 (define-key beframe-prefix-map (kbd "u f") #'beframe-unassume-current-frame-buffers-selectively)
 (define-key beframe-prefix-map (kbd "a F") #'beframe-unassume-frame-buffers)
 (define-key beframe-prefix-map (kbd "u U") #'beframe-unassume-all-buffers-no-prompts)
-(define-key beframe-prefix-map (kbd "a s") #'beframe-assume-buffers-matching-regexp-all-frames)
-(define-key beframe-prefix-map (kbd "u s") #'beframe-unassume-buffers-matching-regexp-all-frames)
+(define-key beframe-prefix-map (kbd "a s") #'beframe-assume-buffers-matching-regexp)
+(define-key beframe-prefix-map (kbd "u s") #'beframe-unassume-buffers-matching-regexp)
 
 ;;;###autoload
 (define-minor-mode beframe-mode
@@ -866,7 +877,7 @@ If FRAME is nil, use the current frame."
 
 (defun beframe-do-not-assume-last-selected-buffer (&rest _)
   "Unassume the buffer of the most recently used window from the new frame."
-  (beframe--unassume (list (window-buffer (get-mru-window)))))
+  (beframe--modify-buffer-list :unassume (list (window-buffer (get-mru-window)))))
 
 (defun beframe--with-other-frame (&rest app)
   "Apply APP with `other-frame-prefix'.

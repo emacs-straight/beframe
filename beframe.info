@@ -1,4 +1,4 @@
-This is doc6ss7KR.info, produced by makeinfo version 6.8 from
+This is dochfNhjp.info, produced by makeinfo version 6.8 from
 beframe.texi.
 
 Copyright (C) 2023 Free Software Foundation, Inc.
@@ -20,7 +20,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: doc6ss7KR.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: dochfNhjp.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 beframe: isolate buffers per frame
 **********************************
@@ -44,11 +44,11 @@ customization options for the Emacs package called ‘beframe’ (or
 to it.
 
    The documentation furnished herein corresponds to stable version
-1.1.0, released on 2024-05-06.  Any reference to a newer feature which
+1.2.0, released on 2024-10-23.  Any reference to a newer feature which
 does not yet form part of the latest tagged commit, is explicitly marked
 as such.
 
-   Current development target is 1.2.0-dev.
+   Current development target is 1.3.0-dev.
 
    • Package name (GNU ELPA): ‘beframe’
    • Official manual: <https://protesilaos.com/emacs/beframe>
@@ -102,7 +102,7 @@ Indices
 
 
 
-File: doc6ss7KR.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
+File: dochfNhjp.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -157,7 +157,7 @@ frame-specific scratch buffer after the frame is deleted.  Set this user
 option to ‘nil’ to disable the killing of such buffers.
 
 
-File: doc6ss7KR.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
+File: dochfNhjp.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
 
 2 Assuming and unassuming buffers
 *********************************
@@ -175,7 +175,7 @@ new lists on demand.
 * Unassuming buffers::
 
 
-File: doc6ss7KR.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
+File: dochfNhjp.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
 
 2.1 Assuming buffers
 ====================
@@ -204,8 +204,6 @@ the current frame.
    • The command ‘beframe-assume-all-buffers-no-prompts’ unconditionally
      assumes the consolidated buffer list.
 
-     [ The following are part of 1.2.0-dev.  ]
-
    • The command ‘beframe-assume-buffers-matching-regexp-all-frames’
      prompts for a regular expression to match against buffer names.
      The matching buffers are assumed by the current frame.  With an
@@ -217,14 +215,15 @@ the current frame.
      matches, it asks for confirmation and then proceeds to kill them.
      If the user option ‘beframe-kill-buffers-no-confirm’ is non-nil, it
      skips that confirmation step to carry out its action outright.
-     Note that Emacs may still prompt for confirmation if the given
-     buffer is unsaved, has a running process, and the like.  Also note
-     that this operation applies to all frames because buffers are
+     Note that Emacs may still prompt for further confirmation if the
+     given buffer is unsaved, has a running process, and the like.  Also
+     note that this operation applies to all frames because buffers are
      shared by the Emacs session even though Beframe only exposes those
-     that pertain to a particular frame.
+     that pertain to a particular frame (*note Features of
+     beframe-mode::).
 
 
-File: doc6ss7KR.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
+File: dochfNhjp.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
 
 2.2 Unassuming buffers
 ======================
@@ -247,8 +246,6 @@ the current frame.
      preserves the list stored in the user option
      ‘beframe-global-buffers’.
 
-     [ The following is part of 1.2.0-dev.  ]
-
    • The ‘beframe-unassume-buffers-matching-regexp-all-frames’ prompts
      for a regular expression to match against buffer names.  The
      matching buffers are unassumed by the current frame.  With an
@@ -256,7 +253,7 @@ the current frame.
      expression is matched against the buffer name or major mode.
 
 
-File: doc6ss7KR.info,  Node: Features of beframe-mode,  Next: The Beframe keymap,  Prev: Assuming and unassuming buffers,  Up: Top
+File: dochfNhjp.info,  Node: Features of beframe-mode,  Next: The Beframe keymap,  Prev: Assuming and unassuming buffers,  Up: Top
 
 3 Features of ‘beframe-mode’
 ****************************
@@ -293,7 +290,7 @@ use Beframe’s commands.  Those are available on demand (*note The
 Beframe keymap::).
 
 
-File: doc6ss7KR.info,  Node: The Beframe keymap,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
+File: dochfNhjp.info,  Node: The Beframe keymap,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
 
 4 The Beframe keymap
 ********************
@@ -314,7 +311,7 @@ Help buffer that links to all the available bindings).
 each other (*note Features of beframe-mode: Features of beframe-mode.).
 
 
-File: doc6ss7KR.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap,  Up: Top
+File: dochfNhjp.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap,  Up: Top
 
 5 Installation
 **************
@@ -325,7 +322,7 @@ File: doc6ss7KR.info,  Node: Installation,  Next: Sample configuration,  Prev: T
 * Manual installation::
 
 
-File: doc6ss7KR.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
+File: dochfNhjp.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
 
 5.1 GNU ELPA package
 ====================
@@ -344,7 +341,7 @@ archive.  Read:
 <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>.
 
 
-File: doc6ss7KR.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
+File: dochfNhjp.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
 
 5.2 Manual installation
 =======================
@@ -371,7 +368,7 @@ following commands in a shell prompt:
    Everything is in place to set up the package.
 
 
-File: doc6ss7KR.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
+File: dochfNhjp.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
 
 6 Sample configuration
 **********************
@@ -393,7 +390,7 @@ File: doc6ss7KR.info,  Node: Sample configuration,  Next: Acknowledgements,  Pre
 * Integration with Ibuffer::
 
 
-File: doc6ss7KR.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
+File: dochfNhjp.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
 
 6.1 Integration with Consult
 ============================
@@ -442,7 +439,7 @@ the first element of the list being the most recently selected buffer
 other than the current one.
 
 
-File: doc6ss7KR.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
+File: dochfNhjp.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
 
 6.2 Integration with Ibuffer
 ============================
@@ -476,7 +473,7 @@ works:
          (memq buf (beframe-buffer-list))))
 
 
-File: doc6ss7KR.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
+File: dochfNhjp.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
 
 7 Acknowledgements
 ******************
@@ -493,7 +490,7 @@ Ideas and/or user feedback
      Derek Passen, Karan Ahlawat, Karthik Chikmagalur, Valentino, duli.
 
 
-File: doc6ss7KR.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
+File: dochfNhjp.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
 
 8 GNU Free Documentation License
 ********************************
@@ -975,7 +972,7 @@ software license, such as the GNU General Public License, to permit
 their use in free software.
 
 
-File: doc6ss7KR.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
+File: dochfNhjp.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
 
 9 Indices
 *********
@@ -987,7 +984,7 @@ File: doc6ss7KR.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up
 * Concept index::
 
 
-File: doc6ss7KR.info,  Node: Function index,  Next: Variable index,  Up: Indices
+File: dochfNhjp.info,  Node: Function index,  Next: Variable index,  Up: Indices
 
 9.1 Function index
 ==================
@@ -997,7 +994,7 @@ File: doc6ss7KR.info,  Node: Function index,  Next: Variable index,  Up: Indices
 
 * beframe-assume-all-buffers-no-prompts: Assuming buffers.     (line 27)
 * beframe-assume-buffers-matching-regexp-all-frames: Assuming buffers.
-                                                               (line 32)
+                                                               (line 30)
 * beframe-assume-buffers-selectively-all-frames: Assuming buffers.
                                                                (line 20)
 * beframe-assume-frame-buffers:          Assuming buffers.     (line  9)
@@ -1005,18 +1002,18 @@ File: doc6ss7KR.info,  Node: Function index,  Next: Variable index,  Up: Indices
 * beframe-buffer-menu:                   Overview.             (line 20)
 * beframe-buffer-names:                  Integration with Consult.
                                                                (line 42)
-* beframe-kill-buffers-matching-regexp:  Assuming buffers.     (line 38)
+* beframe-kill-buffers-matching-regexp:  Assuming buffers.     (line 36)
 * beframe-mode:                          Overview.             (line 15)
 * beframe-switch-buffer:                 Overview.             (line 11)
 * beframe-unassume-all-buffers-no-prompts: Unassuming buffers. (line 19)
 * beframe-unassume-buffers-matching-regexp-all-frames: Unassuming buffers.
-                                                               (line 26)
+                                                               (line 24)
 * beframe-unassume-current-frame-buffers-selectively: Unassuming buffers.
                                                                (line 12)
 * beframe-unassume-frame-buffers:        Unassuming buffers.   (line  9)
 
 
-File: doc6ss7KR.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
+File: dochfNhjp.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
 
 9.2 Variable index
 ==================
@@ -1028,14 +1025,14 @@ File: doc6ss7KR.info,  Node: Variable index,  Next: Concept index,  Prev: Functi
 * beframe-functions-in-frames:           Features of beframe-mode.
                                                                (line 20)
 * beframe-global-buffers:                Overview.             (line 32)
-* beframe-kill-buffers-no-confirm:       Assuming buffers.     (line 38)
+* beframe-kill-buffers-no-confirm:       Assuming buffers.     (line 36)
 * beframe-kill-frame-scratch-buffer:     Overview.             (line 50)
 * beframe-prefix-map:                    The Beframe keymap.   (line  6)
 * beframe-rename-function:               Features of beframe-mode.
                                                                (line 15)
 
 
-File: doc6ss7KR.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
+File: dochfNhjp.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 
 9.3 Concept index
 =================
@@ -1054,20 +1051,20 @@ Node: Overview3269
 Node: Assuming and unassuming buffers6036
 Node: Assuming buffers6548
 Node: Unassuming buffers8948
-Node: Features of beframe-mode10313
-Node: The Beframe keymap12017
-Node: Installation12895
-Node: GNU ELPA package13092
-Node: Manual installation13654
-Node: Sample configuration14427
-Node: Integration with Consult15009
-Node: Integration with Ibuffer17118
-Node: Acknowledgements18333
-Node: GNU Free Documentation License18812
-Node: Indices44155
-Node: Function index44331
-Node: Variable index45852
-Node: Concept index46664
+Node: Features of beframe-mode10266
+Node: The Beframe keymap11970
+Node: Installation12848
+Node: GNU ELPA package13045
+Node: Manual installation13607
+Node: Sample configuration14380
+Node: Integration with Consult14962
+Node: Integration with Ibuffer17071
+Node: Acknowledgements18286
+Node: GNU Free Documentation License18765
+Node: Indices44108
+Node: Function index44284
+Node: Variable index45805
+Node: Concept index46617
 
 End Tag Table
 
