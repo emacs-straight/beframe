@@ -430,7 +430,7 @@ Also see the other Beframe commands:
         (cons list-1 list-2)
       (cons list-2 list-1))))
 
-(defun beframe--modify-buffer-list (operation buffers)
+(defun beframe--modify-buffer-list (operation buffers &optional no-message)
   "Perform OPERATION to modify the current frame buffer list.
 
 OPERATION is a keyword to :assume or :unassume.  To assume is to include
@@ -440,7 +440,10 @@ buffer list.
 BUFFERS is a list of buffer objects to be added or removed from the
 current frame buffer list.  If BUFFERS satisfies `framep', then the list
 of buffers is that of the corresponding frame object (per
-`beframe--get-buffers')."
+`beframe--get-buffers').
+
+With optional NO-MESSAGE, do not produce a message reporting on the
+operation."
   (pcase-let* ((frame-buffers (beframe--get-buffers))
                (new-buffers (if (framep buffers)
                                 (beframe--get-buffers buffers)
@@ -455,17 +458,19 @@ of buffers is that of the corresponding frame object (per
                                frame-buffers)
                               "Unassumed"))
                   (_ (error "`%s' is an unknown operation to modify frame buffers" operation)))))
-    (if-let ((lists (beframe--get-longest-list-first frame-buffers consolidated-buffers))
-             (difference (seq-difference
-                          (mapcar #'buffer-name (car lists))
-                          (mapcar #'buffer-name (cdr lists)))))
+    (if-let* ((lists (beframe--get-longest-list-first frame-buffers consolidated-buffers))
+              (difference (seq-difference
+                           (mapcar #'buffer-name (car lists))
+                           (mapcar #'buffer-name (cdr lists)))))
         (progn
           (modify-frame-parameters nil `((buffer-list . ,consolidated-buffers)))
-          (message "%s %s buffers: %s"
-                   (propertize action 'face 'error)
-                   (propertize (format "%s" (length difference)) 'face 'warning)
-                   (propertize (format "%s" difference) 'face 'success)))
-      (message "No change to the frame's buffer list"))))
+          (unless no-message
+            (message "%s current frame %s buffers: %s"
+                     (propertize action 'face 'error)
+                     (propertize (format "%s" (length difference)) 'face 'warning)
+                     (propertize (format "%s" difference) 'face 'success))))
+      (unless no-message
+        (message "No change to the frame's buffer list")))))
 
 ;;;###autoload
 (defun beframe-assume-frame-buffers (frame)
@@ -594,7 +599,7 @@ Also see the other Beframe commands:
        (if arg
            "Buffer names matching REGEXP in the name or major mode"
          "Buffer names matching REGEXP in the name")))))
-  (if-let ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
+  (if-let* ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
       (beframe--modify-buffer-list :assume buffers)
     (user-error "No buffers match `%s'" regexp)))
 
@@ -617,7 +622,7 @@ Also see the other Beframe commands:
        (if arg
            "Buffer names matching REGEXP in the name or major mode"
          "Buffer names matching REGEXP in the name")))))
-  (if-let ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
+  (if-let* ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
       (beframe--modify-buffer-list :unassume buffers)
     (user-error "No buffers match `%s'" regexp)))
 
@@ -693,7 +698,7 @@ Also see the other Beframe commands:
            "Delete buffers matching REGEXP in the name or major mode"
          "Delete buffers matching REGEXP in the name"))
       arg)))
-  (if-let ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
+  (if-let* ((buffers (beframe--get-buffers (list regexp match-mode-names :no-internal-buffers))))
       (when (or beframe-kill-buffers-no-confirm
                 (y-or-n-p (format "Kill %d buffers matching `%s'?" (length buffers) regexp)))
         (mapc #'kill-buffer buffers))
@@ -877,7 +882,7 @@ If FRAME is nil, use the current frame."
 
 (defun beframe-do-not-assume-last-selected-buffer (&rest _)
   "Unassume the buffer of the most recently used window from the new frame."
-  (beframe--modify-buffer-list :unassume (list (window-buffer (get-mru-window)))))
+  (beframe--modify-buffer-list :unassume (list (window-buffer (get-mru-window))) :no-message))
 
 (defun beframe--with-other-frame (&rest app)
   "Apply APP with `other-frame-prefix'.
