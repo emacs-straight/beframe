@@ -271,7 +271,7 @@ it must satisfy `framep'."
 PROMPT, DEF, REQUIRE-MATCH, and PREDICATE are the same as
 `read-buffer'.  The PREDICATE is ignored, however, to apply the
 per-frame filter."
-  (completing-read prompt
+  (completing-read (format "[Beframed] %s" prompt)
                    (beframe-buffer-names)
                    #'beframe--read-buffer-p
                    require-match
@@ -386,7 +386,7 @@ This is a simplified variant of `list-buffers-noselect'."
   (let* ((frame (if (framep frame) frame (selected-frame)))
          (name (frame-parameter frame 'name))
          (old-buf (current-buffer))
-         (buf (get-buffer-create (format "*Buffer List for %s*" name)))
+         (buf (get-buffer-create (format-message "*Buffer List for `%s' frame*" name)))
          (buffer-list (beframe-buffer-list frame :sort sort)))
     (with-current-buffer buf
       (Buffer-menu-mode)
@@ -765,7 +765,7 @@ Also see the variable `beframe-prefix-map'."
                                (null frame))
                       (kill-buffer buf)))))
       (let* ((frame-bufs (beframe-buffer-list frame))
-             (frame-bufs-with-buf (append frame-bufs (list buf))))
+             (frame-bufs-with-buf (append (list buf) frame-bufs)))
         (modify-frame-parameters
          frame
          `((buffer-list . ,frame-bufs-with-buf)))))))
