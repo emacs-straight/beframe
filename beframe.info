@@ -1,4 +1,4 @@
-This is docz9K91E.info, produced by makeinfo version 6.8 from
+This is docjZ1sql.info, produced by makeinfo version 6.8 from
 beframe.texi.
 
 Copyright (C) 2023 Free Software Foundation, Inc.
@@ -20,7 +20,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docz9K91E.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docjZ1sql.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 beframe: isolate buffers per frame
 **********************************
@@ -102,7 +102,7 @@ Indices
 
 
 
-File: docz9K91E.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
+File: docjZ1sql.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -157,7 +157,7 @@ frame-specific scratch buffer after the frame is deleted.  Set this user
 option to ‘nil’ to disable the killing of such buffers.
 
 
-File: docz9K91E.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
+File: docjZ1sql.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
 
 2 Assuming and unassuming buffers
 *********************************
@@ -175,7 +175,7 @@ new lists on demand.
 * Unassuming buffers::
 
 
-File: docz9K91E.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
+File: docjZ1sql.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
 
 2.1 Assuming buffers
 ====================
@@ -223,7 +223,7 @@ the current frame.
      beframe-mode::).
 
 
-File: docz9K91E.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
+File: docjZ1sql.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
 
 2.2 Unassuming buffers
 ======================
@@ -253,7 +253,7 @@ the current frame.
      expression is matched against the buffer name or major mode.
 
 
-File: docz9K91E.info,  Node: Features of beframe-mode,  Next: The Beframe keymap,  Prev: Assuming and unassuming buffers,  Up: Top
+File: docjZ1sql.info,  Node: Features of beframe-mode,  Next: The Beframe keymap,  Prev: Assuming and unassuming buffers,  Up: Top
 
 3 Features of ‘beframe-mode’
 ****************************
@@ -290,7 +290,7 @@ use Beframe’s commands.  Those are available on demand (*note The
 Beframe keymap::).
 
 
-File: docz9K91E.info,  Node: The Beframe keymap,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
+File: docjZ1sql.info,  Node: The Beframe keymap,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
 
 4 The Beframe keymap
 ********************
@@ -311,7 +311,7 @@ Help buffer that links to all the available bindings).
 each other (*note Features of beframe-mode: Features of beframe-mode.).
 
 
-File: docz9K91E.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap,  Up: Top
+File: docjZ1sql.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap,  Up: Top
 
 5 Installation
 **************
@@ -322,7 +322,7 @@ File: docz9K91E.info,  Node: Installation,  Next: Sample configuration,  Prev: T
 * Manual installation::
 
 
-File: docz9K91E.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
+File: docjZ1sql.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
 
 5.1 GNU ELPA package
 ====================
@@ -341,7 +341,7 @@ archive.  Read:
 <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>.
 
 
-File: docz9K91E.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
+File: docjZ1sql.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
 
 5.2 Manual installation
 =======================
@@ -368,7 +368,7 @@ following commands in a shell prompt:
    Everything is in place to set up the package.
 
 
-File: docz9K91E.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
+File: docjZ1sql.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
 
 6 Sample configuration
 **********************
@@ -390,7 +390,7 @@ File: docz9K91E.info,  Node: Sample configuration,  Next: Acknowledgements,  Pre
 * Integration with Ibuffer::
 
 
-File: docz9K91E.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
+File: docjZ1sql.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
 
 6.1 Integration with Consult
 ============================
@@ -439,7 +439,7 @@ the first element of the list being the most recently selected buffer
 other than the current one.
 
 
-File: docz9K91E.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
+File: docjZ1sql.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
 
 6.2 Integration with Ibuffer
 ============================
@@ -473,7 +473,7 @@ works:
          (memq buf (beframe-buffer-list))))
 
 
-File: docz9K91E.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
+File: docjZ1sql.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
 
 7 Acknowledgements
 ******************
@@ -484,13 +484,14 @@ Author/maintainer
      Protesilaos Stavrou.
 
 Contributions to code or the manual
-     Bruno Boal, Edgar Vincent, Fritz Grabo, Tony Zorman.
+     Bruno Boal, Edgar Vincent, Fritz Grabo, Tony Zorman, Vedang
+     Manerikar.
 
 Ideas and/or user feedback
      Derek Passen, Karan Ahlawat, Karthik Chikmagalur, Valentino, duli.
 
 
-File: docz9K91E.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
+File: docjZ1sql.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
 
 8 GNU Free Documentation License
 ********************************
@@ -972,7 +973,7 @@ software license, such as the GNU General Public License, to permit
 their use in free software.
 
 
-File: docz9K91E.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
+File: docjZ1sql.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
 
 9 Indices
 *********
@@ -984,7 +985,7 @@ File: docz9K91E.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up
 * Concept index::
 
 
-File: docz9K91E.info,  Node: Function index,  Next: Variable index,  Up: Indices
+File: docjZ1sql.info,  Node: Function index,  Next: Variable index,  Up: Indices
 
 9.1 Function index
 ==================
@@ -1013,7 +1014,7 @@ File: docz9K91E.info,  Node: Function index,  Next: Variable index,  Up: Indices
 * beframe-unassume-frame-buffers:        Unassuming buffers.   (line  9)
 
 
-File: docz9K91E.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
+File: docjZ1sql.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
 
 9.2 Variable index
 ==================
@@ -1032,7 +1033,7 @@ File: docz9K91E.info,  Node: Variable index,  Next: Concept index,  Prev: Functi
                                                                (line 15)
 
 
-File: docz9K91E.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
+File: docjZ1sql.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 
 9.3 Concept index
 =================
@@ -1060,11 +1061,11 @@ Node: Sample configuration14380
 Node: Integration with Consult14962
 Node: Integration with Ibuffer17071
 Node: Acknowledgements18286
-Node: GNU Free Documentation License18765
-Node: Indices44108
-Node: Function index44284
-Node: Variable index45805
-Node: Concept index46617
+Node: GNU Free Documentation License18788
+Node: Indices44131
+Node: Function index44307
+Node: Variable index45828
+Node: Concept index46640
 
 End Tag Table
 
