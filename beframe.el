@@ -720,6 +720,8 @@ Meant to be assigned to a prefix key, like this:
 
 (define-key beframe-prefix-map (kbd "b") #'beframe-switch-buffer)
 (define-key beframe-prefix-map (kbd "m") #'beframe-buffer-menu)
+(define-key beframe-prefix-map (kbd "r") #'beframe-rename-current-frame)
+(define-key beframe-prefix-map (kbd "R") #'beframe-rename-frame)
 (define-key beframe-prefix-map (kbd "k") #'beframe-kill-buffers-matching-regexp)
 (define-key beframe-prefix-map (kbd "a f") #'beframe-assume-frame-buffers-selectively)
 (define-key beframe-prefix-map (kbd "a F") #'beframe-assume-frame-buffers)
@@ -753,7 +755,7 @@ Also see the variable `beframe-prefix-map'."
   "Create scratch buffer in `initial-major-mode' for FRAME."
   (when beframe-create-frame-scratch-buffer
     (let* ((name (frame-parameter frame 'name))
-           (buf (get-buffer-create (format "*scratch for %s*" name))))
+           (buf (get-buffer-create (format-message "*scratch for frame `%s'*" name))))
       (with-current-buffer buf
         (funcall initial-major-mode)
         (when (and (zerop (buffer-size))
@@ -782,26 +784,36 @@ Also see the variable `beframe-prefix-map'."
 
 (defvar project--list) ; from project.el
 
-(defun beframe--get-frame-name (name)
-  "Return the frame with name NAME, or nil if none exists."
-  (car (filtered-frame-list
-        (lambda (frame)
-          (string= (frame-parameter frame 'name) name)))))
+(defun beframe--get-frame-names (name)
+  "Return frame names equal to NAME."
+  (delq nil
+        (mapcar
+         (lambda (frame)
+           (when-let* ((frame-name (frame-parameter frame 'name))
+                       ((not (string-empty-p frame-name)))
+                       ((string= frame-name name)))
+             frame-name))
+         (frame-list))))
 
 (defun beframe--generate-unique-frame-name (name)
   "Generate a unique frame name starting with NAME.
 If NAME is unique, return it as-is.  Otherwise, append <2>, <3>, etc.
-until a unique name is found.
-
-This is the same logic as implemented by `generate-new-buffer-name'."
-  (if (null (beframe--get-frame-name name))
-      name  ; Return name as-is if no frame has this name
-    (let ((n 2)
-          (candidate-name name))
-      (while (beframe--get-frame-name candidate-name)
-        (setq candidate-name (format "%s<%d>" name n)
-              n (1+ n)))
-      candidate-name)))
+until a unique name is found."
+  (let ((frame-names (beframe--get-frame-names name)))
+    ;; Because this happens after the frame is created, if the length
+    ;; is 1, then we do not need to uniquify the name: it should be
+    ;; unique already.  This way, we avoid the scenario where some
+    ;; command already names the frame equal to NAME and then we
+    ;; increment the number.  It happened to me frequently with
+    ;; `dired-other-frame' and related.
+    (if (or (null frame-names) (= (length frame-names) 1))
+        name
+      (let ((n 2)
+            (candidate-name name))
+        (while (beframe--get-frame-names candidate-name)
+          (setq candidate-name (format "%s<%d>" name n)
+                n (1+ n)))
+        candidate-name))))
 
 (defun beframe-infer-frame-name (frame name)
   "Infer a suitable name for FRAME with given NAME.
@@ -867,6 +879,16 @@ while also reviewing `beframe-infer-frame-name'."
   (modify-frame-parameters
    frame
    (list (cons 'name (beframe-infer-frame-name frame name)))))
+
+;;;###autoload
+(defun beframe-rename-current-frame ()
+  "Convenience wrapper of `beframe-rename-frame' to rename the current frame."
+  (declare (interactive-only t))
+  (interactive)
+  (let ((frame (selected-frame)))
+    (modify-frame-parameters
+     frame
+     (list (cons 'name (beframe-infer-frame-name frame nil))))))
 
 (defun beframe-maybe-rename-frame (frame &optional name)
   "Helper function to determine if `beframe-rename-function' is called.
