@@ -1,7 +1,7 @@
-This is docAVtoYE.info, produced by makeinfo version 6.8 from
+This is doc2Zc3Cw.info, produced by makeinfo version 6.8 from
 beframe.texi.
 
-Copyright (C) 2023 Free Software Foundation, Inc.
+Copyright (C) 2023-2025 Free Software Foundation, Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -20,12 +20,12 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docAVtoYE.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: doc2Zc3Cw.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 beframe: isolate buffers per frame
 **********************************
 
-Copyright (C) 2023 Free Software Foundation, Inc.
+Copyright (C) 2023-2025 Free Software Foundation, Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -70,7 +70,7 @@ of it.
 * Overview::
 * Assuming and unassuming buffers::
 * Features of beframe-mode::
-* The Beframe keymap::
+* The Beframe keymap or transient user interface::
 * Installation::
 * Sample configuration::
 * Acknowledgements::
@@ -102,7 +102,7 @@ Indices
 
 
 
-File: docAVtoYE.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
+File: doc2Zc3Cw.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -157,7 +157,7 @@ frame-specific scratch buffer after the frame is deleted.  Set this user
 option to ‘nil’ to disable the killing of such buffers.
 
 
-File: docAVtoYE.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
+File: doc2Zc3Cw.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
 
 2 Assuming and unassuming buffers
 *********************************
@@ -167,7 +167,8 @@ buffers associated with the current frame.  This provides for a flexible
 workflow where buffers can be initially beframed yet consolidated into
 new lists on demand.
 
-   *note The Beframe keymap::
+   *note The Beframe keymap: The Beframe keymap or transient user
+interface.
 
 * Menu:
 
@@ -175,7 +176,7 @@ new lists on demand.
 * Unassuming buffers::
 
 
-File: docAVtoYE.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
+File: doc2Zc3Cw.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
 
 2.1 Assuming buffers
 ====================
@@ -223,7 +224,7 @@ the current frame.
      beframe-mode::).
 
 
-File: docAVtoYE.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
+File: doc2Zc3Cw.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
 
 2.2 Unassuming buffers
 ======================
@@ -253,7 +254,7 @@ the current frame.
      expression is matched against the buffer name or major mode.
 
 
-File: docAVtoYE.info,  Node: Features of beframe-mode,  Next: The Beframe keymap,  Prev: Assuming and unassuming buffers,  Up: Top
+File: doc2Zc3Cw.info,  Node: Features of beframe-mode,  Next: The Beframe keymap or transient user interface,  Prev: Assuming and unassuming buffers,  Up: Top
 
 3 Features of ‘beframe-mode’
 ****************************
@@ -287,13 +288,13 @@ The ‘beframe-mode’ does the following:
 
    Those granted, it is not necessary to enable the ‘beframe-mode’ to
 use Beframe’s commands.  Those are available on demand (*note The
-Beframe keymap::).
+Beframe keymap: The Beframe keymap or transient user interface.).
 
 
-File: docAVtoYE.info,  Node: The Beframe keymap,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
+File: doc2Zc3Cw.info,  Node: The Beframe keymap or transient user interface,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
 
-4 The Beframe keymap
-********************
+4 The Beframe keymap or transient user interface
+************************************************
 
 The ‘beframe-prefix-map’ defines key bindings for the Beframe commands
 documented herein.  We call it a prefix keymap because it is not
@@ -310,8 +311,16 @@ Help buffer that links to all the available bindings).
    The ‘beframe-prefix-map’ and ‘beframe-mode’ are used independent of
 each other (*note Features of beframe-mode: Features of beframe-mode.).
 
+   [ The ‘beframe-transient’ is part of 1.3.0-dev.  ]
+
+   Users who prefer a more graphical interface can bind the
+‘beframe-transient’ instead of the aforementioned prefix map.  For
+example:
+
+     (define-key global-map (kbd "C-c b") #'beframe-transient)
+
 
-File: docAVtoYE.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap,  Up: Top
+File: doc2Zc3Cw.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap or transient user interface,  Up: Top
 
 5 Installation
 **************
@@ -322,7 +331,7 @@ File: docAVtoYE.info,  Node: Installation,  Next: Sample configuration,  Prev: T
 * Manual installation::
 
 
-File: docAVtoYE.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
+File: doc2Zc3Cw.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
 
 5.1 GNU ELPA package
 ====================
@@ -341,7 +350,7 @@ archive.  Read:
 <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>.
 
 
-File: docAVtoYE.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
+File: doc2Zc3Cw.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
 
 5.2 Manual installation
 =======================
@@ -368,7 +377,7 @@ following commands in a shell prompt:
    Everything is in place to set up the package.
 
 
-File: docAVtoYE.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
+File: doc2Zc3Cw.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
 
 6 Sample configuration
 **********************
@@ -383,6 +392,8 @@ File: docAVtoYE.info,  Node: Sample configuration,  Next: Acknowledgements,  Pre
 
      ;; Bind Beframe commands to a prefix key, such as C-c b:
      (define-key global-map (kbd "C-c b") #'beframe-prefix-map)
+     ;; OR use the transient instead of the prefix map:
+     (define-key global-map (kbd "C-c b") #'beframe-transient)
 
 * Menu:
 
@@ -390,7 +401,7 @@ File: docAVtoYE.info,  Node: Sample configuration,  Next: Acknowledgements,  Pre
 * Integration with Ibuffer::
 
 
-File: docAVtoYE.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
+File: doc2Zc3Cw.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
 
 6.1 Integration with Consult
 ============================
@@ -439,7 +450,7 @@ the first element of the list being the most recently selected buffer
 other than the current one.
 
 
-File: docAVtoYE.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
+File: doc2Zc3Cw.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
 
 6.2 Integration with Ibuffer
 ============================
@@ -473,7 +484,7 @@ works:
          (memq buf (beframe-buffer-list))))
 
 
-File: docAVtoYE.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
+File: doc2Zc3Cw.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
 
 7 Acknowledgements
 ******************
@@ -491,7 +502,7 @@ Ideas and/or user feedback
      Derek Passen, Karan Ahlawat, Karthik Chikmagalur, Valentino, duli.
 
 
-File: docAVtoYE.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
+File: doc2Zc3Cw.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
 
 8 GNU Free Documentation License
 ********************************
@@ -973,7 +984,7 @@ software license, such as the GNU General Public License, to permit
 their use in free software.
 
 
-File: docAVtoYE.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
+File: doc2Zc3Cw.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
 
 9 Indices
 *********
@@ -985,7 +996,7 @@ File: docAVtoYE.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up
 * Concept index::
 
 
-File: docAVtoYE.info,  Node: Function index,  Next: Variable index,  Up: Indices
+File: doc2Zc3Cw.info,  Node: Function index,  Next: Variable index,  Up: Indices
 
 9.1 Function index
 ==================
@@ -1006,6 +1017,8 @@ File: docAVtoYE.info,  Node: Function index,  Next: Variable index,  Up: Indices
 * beframe-kill-buffers-matching-regexp:  Assuming buffers.     (line 36)
 * beframe-mode:                          Overview.             (line 15)
 * beframe-switch-buffer:                 Overview.             (line 11)
+* beframe-transient:                     The Beframe keymap or transient user interface.
+                                                               (line 23)
 * beframe-unassume-all-buffers-no-prompts: Unassuming buffers. (line 19)
 * beframe-unassume-buffers-matching-regexp-all-frames: Unassuming buffers.
                                                                (line 24)
@@ -1014,7 +1027,7 @@ File: docAVtoYE.info,  Node: Function index,  Next: Variable index,  Up: Indices
 * beframe-unassume-frame-buffers:        Unassuming buffers.   (line  9)
 
 
-File: docAVtoYE.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
+File: doc2Zc3Cw.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
 
 9.2 Variable index
 ==================
@@ -1028,12 +1041,13 @@ File: docAVtoYE.info,  Node: Variable index,  Next: Concept index,  Prev: Functi
 * beframe-global-buffers:                Overview.             (line 32)
 * beframe-kill-buffers-no-confirm:       Assuming buffers.     (line 36)
 * beframe-kill-frame-scratch-buffer:     Overview.             (line 50)
-* beframe-prefix-map:                    The Beframe keymap.   (line  6)
+* beframe-prefix-map:                    The Beframe keymap or transient user interface.
+                                                               (line  6)
 * beframe-rename-function:               Features of beframe-mode.
                                                                (line 15)
 
 
-File: docAVtoYE.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
+File: doc2Zc3Cw.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 
 9.3 Concept index
 =================
@@ -1047,25 +1061,25 @@ File: docAVtoYE.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 
 
 Tag Table:
-Node: Top829
-Node: Overview3269
-Node: Assuming and unassuming buffers6036
-Node: Assuming buffers6548
-Node: Unassuming buffers8948
-Node: Features of beframe-mode10266
-Node: The Beframe keymap11970
-Node: Installation12848
-Node: GNU ELPA package13045
-Node: Manual installation13607
-Node: Sample configuration14380
-Node: Integration with Consult14962
-Node: Integration with Ibuffer17071
-Node: Acknowledgements18286
-Node: GNU Free Documentation License18788
-Node: Indices44131
-Node: Function index44307
-Node: Variable index45828
-Node: Concept index46640
+Node: Top834
+Node: Overview3307
+Node: Assuming and unassuming buffers6074
+Node: Assuming buffers6633
+Node: Unassuming buffers9033
+Node: Features of beframe-mode10351
+Node: The Beframe keymap or transient user interface12130
+Node: Installation13356
+Node: GNU ELPA package13581
+Node: Manual installation14143
+Node: Sample configuration14916
+Node: Integration with Consult15617
+Node: Integration with Ibuffer17726
+Node: Acknowledgements18941
+Node: GNU Free Documentation License19443
+Node: Indices44786
+Node: Function index44962
+Node: Variable index46645
+Node: Concept index47546
 
 End Tag Table
 

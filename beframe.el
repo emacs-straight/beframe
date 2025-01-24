@@ -1,6 +1,6 @@
 ;;; beframe.el --- Isolate buffers per frame -*- lexical-binding: t -*-
 
-;; Copyright (C) 2023-2024  Free Software Foundation, Inc.
+;; Copyright (C) 2023-2025  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
@@ -360,16 +360,11 @@ Also see the other Beframe commands:
 BUFFER is selected with completion among a list of buffers that
 belong to FRAME.
 
-Either bind this command to a key as an alternative to
-`switch-to-buffer', or enable the minor mode
-`beframe-mode' which makes all buffer prompts limit the
-candidates to those that belong to the selected frame.
-
 Also see `beframe-switch-buffer'.
 
-Raising and then selecting FRAME does not depend solely on Emacs.
-The window manager must permit such an operation.  See bug#61319:
-<https://debbugs.gnu.org/cgi/bugreport.cgi?bug=61319>."
+Note that raising and then selecting FRAME does not depend solely on
+Emacs.  The window manager must permit such an operation.  See
+bug#61319: <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=61319>."
   (interactive
    (let ((obj (beframe--frame-object (beframe--frame-prompt))))
      (list obj (beframe--buffer-prompt obj))))
@@ -603,7 +598,7 @@ Also see the other Beframe commands:
       (beframe--modify-buffer-list :assume buffers)
     (user-error "No buffers match `%s'" regexp)))
 
-(defalias 'beframe-assume-buffers-matching-regexp 'beframe-assume-buffers-matching-regexp-all-frames
+(defalias 'beframe-assume-buffers-matching-regexp-all-frames 'beframe-assume-buffers-matching-regexp
   "Alias for `beframe-assume-buffers-matching-regexp'.")
 
 ;;;###autoload
@@ -627,7 +622,7 @@ Also see the other Beframe commands:
     (user-error "No buffers match `%s'" regexp)))
 
 
-(defalias 'beframe-unassume-buffers-matching-regexp 'beframe-unassume-buffers-matching-regexp-all-frames
+(defalias 'beframe-unassume-buffers-matching-regexp-all-frames 'beframe-unassume-buffers-matching-regexp
   "Alias for `beframe-unassume-buffers-matching-regexp'.")
 
 (define-obsolete-function-alias
@@ -719,6 +714,7 @@ Meant to be assigned to a prefix key, like this:
 (define-prefix-command 'beframe-prefix-map)
 
 (define-key beframe-prefix-map (kbd "b") #'beframe-switch-buffer)
+(define-key beframe-prefix-map (kbd "B") #'beframe-switch-buffer-in-frame)
 (define-key beframe-prefix-map (kbd "m") #'beframe-buffer-menu)
 (define-key beframe-prefix-map (kbd "r") #'beframe-rename-current-frame)
 (define-key beframe-prefix-map (kbd "R") #'beframe-rename-frame)
@@ -785,7 +781,7 @@ Also see the variable `beframe-prefix-map'."
 (defvar project--list) ; from project.el
 
 (defun beframe--get-frame-names (name)
-  "Return frame names equal to NAME."
+  "Return frame names equal to NAME as a list of strings."
   (delq nil
         (mapcar
          (lambda (frame)
