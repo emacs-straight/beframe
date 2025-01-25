@@ -1,4 +1,4 @@
-This is doc2Zc3Cw.info, produced by makeinfo version 6.8 from
+This is docJh4mjb.info, produced by makeinfo version 6.8 from
 beframe.texi.
 
 Copyright (C) 2023-2025 Free Software Foundation, Inc.
@@ -20,7 +20,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: doc2Zc3Cw.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docJh4mjb.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 beframe: isolate buffers per frame
 **********************************
@@ -44,11 +44,11 @@ customization options for the Emacs package called ‘beframe’ (or
 to it.
 
    The documentation furnished herein corresponds to stable version
-1.2.0, released on 2024-10-23.  Any reference to a newer feature which
+1.3.0, released on 2025-01-24.  Any reference to a newer feature which
 does not yet form part of the latest tagged commit, is explicitly marked
 as such.
 
-   Current development target is 1.3.0-dev.
+   Current development target is 1.4.0-dev.
 
    • Package name (GNU ELPA): ‘beframe’
    • Official manual: <https://protesilaos.com/emacs/beframe>
@@ -102,7 +102,7 @@ Indices
 
 
 
-File: doc2Zc3Cw.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
+File: docJh4mjb.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -157,7 +157,7 @@ frame-specific scratch buffer after the frame is deleted.  Set this user
 option to ‘nil’ to disable the killing of such buffers.
 
 
-File: doc2Zc3Cw.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
+File: docJh4mjb.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
 
 2 Assuming and unassuming buffers
 *********************************
@@ -176,7 +176,7 @@ interface.
 * Unassuming buffers::
 
 
-File: doc2Zc3Cw.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
+File: docJh4mjb.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
 
 2.1 Assuming buffers
 ====================
@@ -224,7 +224,7 @@ the current frame.
      beframe-mode::).
 
 
-File: doc2Zc3Cw.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
+File: docJh4mjb.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
 
 2.2 Unassuming buffers
 ======================
@@ -254,7 +254,7 @@ the current frame.
      expression is matched against the buffer name or major mode.
 
 
-File: doc2Zc3Cw.info,  Node: Features of beframe-mode,  Next: The Beframe keymap or transient user interface,  Prev: Assuming and unassuming buffers,  Up: Top
+File: docJh4mjb.info,  Node: Features of beframe-mode,  Next: The Beframe keymap or transient user interface,  Prev: Assuming and unassuming buffers,  Up: Top
 
 3 Features of ‘beframe-mode’
 ****************************
@@ -291,7 +291,7 @@ use Beframe’s commands.  Those are available on demand (*note The
 Beframe keymap: The Beframe keymap or transient user interface.).
 
 
-File: doc2Zc3Cw.info,  Node: The Beframe keymap or transient user interface,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
+File: docJh4mjb.info,  Node: The Beframe keymap or transient user interface,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
 
 4 The Beframe keymap or transient user interface
 ************************************************
@@ -311,8 +311,6 @@ Help buffer that links to all the available bindings).
    The ‘beframe-prefix-map’ and ‘beframe-mode’ are used independent of
 each other (*note Features of beframe-mode: Features of beframe-mode.).
 
-   [ The ‘beframe-transient’ is part of 1.3.0-dev.  ]
-
    Users who prefer a more graphical interface can bind the
 ‘beframe-transient’ instead of the aforementioned prefix map.  For
 example:
@@ -320,7 +318,7 @@ example:
      (define-key global-map (kbd "C-c b") #'beframe-transient)
 
 
-File: doc2Zc3Cw.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap or transient user interface,  Up: Top
+File: docJh4mjb.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap or transient user interface,  Up: Top
 
 5 Installation
 **************
@@ -331,7 +329,7 @@ File: doc2Zc3Cw.info,  Node: Installation,  Next: Sample configuration,  Prev: T
 * Manual installation::
 
 
-File: doc2Zc3Cw.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
+File: docJh4mjb.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
 
 5.1 GNU ELPA package
 ====================
@@ -350,7 +348,7 @@ archive.  Read:
 <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>.
 
 
-File: doc2Zc3Cw.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
+File: docJh4mjb.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
 
 5.2 Manual installation
 =======================
@@ -377,7 +375,7 @@ following commands in a shell prompt:
    Everything is in place to set up the package.
 
 
-File: doc2Zc3Cw.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
+File: docJh4mjb.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
 
 6 Sample configuration
 **********************
@@ -401,7 +399,7 @@ File: doc2Zc3Cw.info,  Node: Sample configuration,  Next: Acknowledgements,  Pre
 * Integration with Ibuffer::
 
 
-File: doc2Zc3Cw.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
+File: docJh4mjb.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
 
 6.1 Integration with Consult
 ============================
@@ -450,7 +448,7 @@ the first element of the list being the most recently selected buffer
 other than the current one.
 
 
-File: doc2Zc3Cw.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
+File: docJh4mjb.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
 
 6.2 Integration with Ibuffer
 ============================
@@ -484,7 +482,7 @@ works:
          (memq buf (beframe-buffer-list))))
 
 
-File: doc2Zc3Cw.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
+File: docJh4mjb.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
 
 7 Acknowledgements
 ******************
@@ -495,14 +493,14 @@ Author/maintainer
      Protesilaos Stavrou.
 
 Contributions to code or the manual
-     Bruno Boal, Edgar Vincent, Fritz Grabo, Tony Zorman, Vedang
-     Manerikar.
+     Bruno Boal, Edgar Vincent, Fritz Grabo, Stefan Monnier, Tony
+     Zorman, Vedang Manerikar.
 
 Ideas and/or user feedback
      Derek Passen, Karan Ahlawat, Karthik Chikmagalur, Valentino, duli.
 
 
-File: doc2Zc3Cw.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
+File: docJh4mjb.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
 
 8 GNU Free Documentation License
 ********************************
@@ -984,7 +982,7 @@ software license, such as the GNU General Public License, to permit
 their use in free software.
 
 
-File: doc2Zc3Cw.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
+File: docJh4mjb.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
 
 9 Indices
 *********
@@ -996,7 +994,7 @@ File: doc2Zc3Cw.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up
 * Concept index::
 
 
-File: doc2Zc3Cw.info,  Node: Function index,  Next: Variable index,  Up: Indices
+File: docJh4mjb.info,  Node: Function index,  Next: Variable index,  Up: Indices
 
 9.1 Function index
 ==================
@@ -1018,7 +1016,7 @@ File: doc2Zc3Cw.info,  Node: Function index,  Next: Variable index,  Up: Indices
 * beframe-mode:                          Overview.             (line 15)
 * beframe-switch-buffer:                 Overview.             (line 11)
 * beframe-transient:                     The Beframe keymap or transient user interface.
-                                                               (line 23)
+                                                               (line 21)
 * beframe-unassume-all-buffers-no-prompts: Unassuming buffers. (line 19)
 * beframe-unassume-buffers-matching-regexp-all-frames: Unassuming buffers.
                                                                (line 24)
@@ -1027,7 +1025,7 @@ File: doc2Zc3Cw.info,  Node: Function index,  Next: Variable index,  Up: Indices
 * beframe-unassume-frame-buffers:        Unassuming buffers.   (line  9)
 
 
-File: doc2Zc3Cw.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
+File: docJh4mjb.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
 
 9.2 Variable index
 ==================
@@ -1047,7 +1045,7 @@ File: doc2Zc3Cw.info,  Node: Variable index,  Next: Concept index,  Prev: Functi
                                                                (line 15)
 
 
-File: doc2Zc3Cw.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
+File: docJh4mjb.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 
 9.3 Concept index
 =================
@@ -1068,18 +1066,18 @@ Node: Assuming buffers6633
 Node: Unassuming buffers9033
 Node: Features of beframe-mode10351
 Node: The Beframe keymap or transient user interface12130
-Node: Installation13356
-Node: GNU ELPA package13581
-Node: Manual installation14143
-Node: Sample configuration14916
-Node: Integration with Consult15617
-Node: Integration with Ibuffer17726
-Node: Acknowledgements18941
-Node: GNU Free Documentation License19443
-Node: Indices44786
-Node: Function index44962
-Node: Variable index46645
-Node: Concept index47546
+Node: Installation13297
+Node: GNU ELPA package13522
+Node: Manual installation14084
+Node: Sample configuration14857
+Node: Integration with Consult15558
+Node: Integration with Ibuffer17667
+Node: Acknowledgements18882
+Node: GNU Free Documentation License19400
+Node: Indices44743
+Node: Function index44919
+Node: Variable index46602
+Node: Concept index47503
 
 End Tag Table
 
