@@ -1,4 +1,4 @@
-This is docJClkpr.info, produced by makeinfo version 6.8 from
+This is docoBbeBZ.info, produced by makeinfo version 6.8 from
 beframe.texi.
 
 Copyright (C) 2023-2025 Free Software Foundation, Inc.
@@ -20,7 +20,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docJClkpr.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docoBbeBZ.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 beframe: isolate buffers per frame
 **********************************
@@ -94,6 +94,11 @@ Sample configuration
 * Integration with Consult::
 * Integration with Ibuffer::
 
+Integration with Consult
+
+* Beframed buffers as a Consult buffer source::
+* Beframed buffers as the complete Consult buffer list::
+
 Indices
 
 * Function index::
@@ -102,7 +107,7 @@ Indices
 
 
 
-File: docJClkpr.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
+File: docoBbeBZ.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -159,7 +164,7 @@ frame-specific scratch buffer after the frame is deleted.  Set this user
 option to ‘nil’ to disable the killing of such buffers.
 
 
-File: docJClkpr.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
+File: docoBbeBZ.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
 
 2 Assuming and unassuming buffers
 *********************************
@@ -178,7 +183,7 @@ interface.
 * Unassuming buffers::
 
 
-File: docJClkpr.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
+File: docoBbeBZ.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
 
 2.1 Assuming buffers
 ====================
@@ -226,7 +231,7 @@ the current frame.
      beframe-mode::).
 
 
-File: docJClkpr.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
+File: docoBbeBZ.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
 
 2.2 Unassuming buffers
 ======================
@@ -256,7 +261,7 @@ the current frame.
      expression is matched against the buffer name or major mode.
 
 
-File: docJClkpr.info,  Node: Features of beframe-mode,  Next: The Beframe keymap or transient user interface,  Prev: Assuming and unassuming buffers,  Up: Top
+File: docoBbeBZ.info,  Node: Features of beframe-mode,  Next: The Beframe keymap or transient user interface,  Prev: Assuming and unassuming buffers,  Up: Top
 
 3 Features of ‘beframe-mode’
 ****************************
@@ -293,7 +298,7 @@ use Beframe’s commands.  Those are available on demand (*note The
 Beframe keymap: The Beframe keymap or transient user interface.).
 
 
-File: docJClkpr.info,  Node: The Beframe keymap or transient user interface,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
+File: docoBbeBZ.info,  Node: The Beframe keymap or transient user interface,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
 
 4 The Beframe keymap or transient user interface
 ************************************************
@@ -320,7 +325,7 @@ example:
      (define-key global-map (kbd "C-c b") #'beframe-transient)
 
 
-File: docJClkpr.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap or transient user interface,  Up: Top
+File: docoBbeBZ.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap or transient user interface,  Up: Top
 
 5 Installation
 **************
@@ -331,7 +336,7 @@ File: docJClkpr.info,  Node: Installation,  Next: Sample configuration,  Prev: T
 * Manual installation::
 
 
-File: docJClkpr.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
+File: docoBbeBZ.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
 
 5.1 GNU ELPA package
 ====================
@@ -350,7 +355,7 @@ archive.  Read:
 <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>.
 
 
-File: docJClkpr.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
+File: docoBbeBZ.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
 
 5.2 Manual installation
 =======================
@@ -377,7 +382,7 @@ following commands in a shell prompt:
    Everything is in place to set up the package.
 
 
-File: docJClkpr.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
+File: docoBbeBZ.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
 
 6 Sample configuration
 **********************
@@ -401,7 +406,7 @@ File: docJClkpr.info,  Node: Sample configuration,  Next: Acknowledgements,  Pre
 * Integration with Ibuffer::
 
 
-File: docJClkpr.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
+File: docoBbeBZ.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
 
 6.1 Integration with Consult
 ============================
@@ -413,9 +418,21 @@ possibly other sources in a single interface.  With ‘consult-buffer’ the
 user can see previews of the given completion candidate and also narrow
 to a specific source.
 
-   It is possible to add beframed buffers to the list of sources the
-‘consult-buffer’ command reads from.  Just add the following to the
-‘beframe’ configuration:
+* Menu:
+
+* Beframed buffers as a Consult buffer source::
+* Beframed buffers as the complete Consult buffer list::
+
+
+File: docoBbeBZ.info,  Node: Beframed buffers as a Consult buffer source,  Next: Beframed buffers as the complete Consult buffer list,  Up: Integration with Consult
+
+6.1.1 Beframed buffers as a Consult buffer source
+-------------------------------------------------
+
+It is possible to add beframed buffers to the list of sources the
+‘consult-buffer’ command reads from.  The alternative is to replace the
+full list altogether (*note Beframed buffers as the complete Consult
+buffer list::).  Just add the following to the ‘beframe’ configuration:
 
      (defvar consult-buffer-sources)
      (declare-function consult--buffer-state "consult")
@@ -442,15 +459,33 @@ to a specific source.
 
        (add-to-list 'consult-buffer-sources 'beframe-consult-source))
 
-   As you can see from the snippet above, much like
-‘consult--buffer-query’ itself, the ‘beframe-buffer-names’ function may
-take a keyword argument ‘:sort’.  In our case, it is set to
-‘beframe-buffer-sort-visibility’, which groups buffers by visibility,
-the first element of the list being the most recently selected buffer
-other than the current one.
+   The ‘beframe-buffer-names’ function may take a keyword argument
+‘:sort’.  In our case, it is set to ‘beframe-buffer-sort-visibility’,
+which groups buffers by visibility, the first element of the list being
+the most recently selected buffer other than the current one.
 
 
-File: docJClkpr.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
+File: docoBbeBZ.info,  Node: Beframed buffers as the complete Consult buffer list,  Prev: Beframed buffers as a Consult buffer source,  Up: Integration with Consult
+
+6.1.2 Beframed buffers as the complete Consult buffer list
+----------------------------------------------------------
+
+Other than defining a ‘consult-buffer’ source (*note Beframed buffers as
+a Consult buffer source::), it is possible to limit the
+‘consult-buffer-list’ completely to only show beframed buffers:
+
+     (defun consult-beframe-buffer-list (&optional frame)
+       "Return the list of buffers from `beframe-buffer-names' sorted by visibility.
+     With optional argument FRAME, return the list of buffers of FRAME."
+       (beframe-buffer-list frame :sort #'beframe-buffer-sort-visibility))
+
+     (setq consult-buffer-list #'consult-beframe-buffer-list)
+
+   Similar to ‘beframe-buffer-names’, the function ‘beframe-buffer-list’
+takes a keyword argument ‘:sort’, which we use to sort by visibility.
+
+
+File: docoBbeBZ.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
 
 6.2 Integration with Ibuffer
 ============================
@@ -484,7 +519,7 @@ works:
          (memq buf (beframe-buffer-list))))
 
 
-File: docJClkpr.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
+File: docoBbeBZ.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
 
 7 Acknowledgements
 ******************
@@ -495,14 +530,14 @@ Author/maintainer
      Protesilaos Stavrou.
 
 Contributions to code or the manual
-     Bruno Boal, Edgar Vincent, Fritz Grabo, Stefan Monnier, Tony
-     Zorman, Vedang Manerikar.
+     Bruno Boal, Daniel Mendler, Edgar Vincent, Fritz Grabo, Stefan
+     Monnier, Tony Zorman, Vedang Manerikar.
 
 Ideas and/or user feedback
      Derek Passen, Karan Ahlawat, Karthik Chikmagalur, Valentino, duli.
 
 
-File: docJClkpr.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
+File: docoBbeBZ.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
 
 8 GNU Free Documentation License
 ********************************
@@ -984,7 +1019,7 @@ software license, such as the GNU General Public License, to permit
 their use in free software.
 
 
-File: docJClkpr.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
+File: docoBbeBZ.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
 
 9 Indices
 *********
@@ -996,7 +1031,7 @@ File: docJClkpr.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up
 * Concept index::
 
 
-File: docJClkpr.info,  Node: Function index,  Next: Variable index,  Up: Indices
+File: docoBbeBZ.info,  Node: Function index,  Next: Variable index,  Up: Indices
 
 9.1 Function index
 ==================
@@ -1011,9 +1046,11 @@ File: docJClkpr.info,  Node: Function index,  Next: Variable index,  Up: Indices
                                                                (line 20)
 * beframe-assume-frame-buffers:          Assuming buffers.     (line  9)
 * beframe-assume-frame-buffers-selectively: Assuming buffers.  (line 12)
+* beframe-buffer-list:                   Beframed buffers as the complete Consult buffer list.
+                                                               (line 17)
 * beframe-buffer-menu:                   Overview.             (line 22)
-* beframe-buffer-names:                  Integration with Consult.
-                                                               (line 42)
+* beframe-buffer-names:                  Beframed buffers as a Consult buffer source.
+                                                               (line 36)
 * beframe-kill-buffers-matching-regexp:  Assuming buffers.     (line 36)
 * beframe-mode:                          Overview.             (line 15)
 * beframe-switch-buffer:                 Overview.             (line 11)
@@ -1027,7 +1064,7 @@ File: docJClkpr.info,  Node: Function index,  Next: Variable index,  Up: Indices
 * beframe-unassume-frame-buffers:        Unassuming buffers.   (line  9)
 
 
-File: docJClkpr.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
+File: docoBbeBZ.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
 
 9.2 Variable index
 ==================
@@ -1049,7 +1086,7 @@ File: docJClkpr.info,  Node: Variable index,  Next: Concept index,  Prev: Functi
                                                                (line 15)
 
 
-File: docJClkpr.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
+File: docoBbeBZ.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 
 9.3 Concept index
 =================
@@ -1064,24 +1101,26 @@ File: docJClkpr.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 
 Tag Table:
 Node: Top834
-Node: Overview3307
-Node: Assuming and unassuming buffers6214
-Node: Assuming buffers6773
-Node: Unassuming buffers9173
-Node: Features of beframe-mode10491
-Node: The Beframe keymap or transient user interface12270
-Node: Installation13437
-Node: GNU ELPA package13662
-Node: Manual installation14224
-Node: Sample configuration14997
-Node: Integration with Consult15698
-Node: Integration with Ibuffer17807
-Node: Acknowledgements19022
-Node: GNU Free Documentation License19540
-Node: Indices44883
-Node: Function index45059
-Node: Variable index46742
-Node: Concept index47789
+Node: Overview3439
+Node: Assuming and unassuming buffers6346
+Node: Assuming buffers6905
+Node: Unassuming buffers9305
+Node: Features of beframe-mode10623
+Node: The Beframe keymap or transient user interface12402
+Node: Installation13569
+Node: GNU ELPA package13794
+Node: Manual installation14356
+Node: Sample configuration15129
+Node: Integration with Consult15830
+Node: Beframed buffers as a Consult buffer source16507
+Node: Beframed buffers as the complete Consult buffer list18355
+Node: Integration with Ibuffer19355
+Node: Acknowledgements20570
+Node: GNU Free Documentation License21104
+Node: Indices46447
+Node: Function index46623
+Node: Variable index48493
+Node: Concept index49540
 
 End Tag Table
 
