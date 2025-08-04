@@ -1,4 +1,4 @@
-This is docoBbeBZ.info, produced by makeinfo version 6.8 from
+This is docm1ipHi.info, produced by makeinfo version 6.8 from
 beframe.texi.
 
 Copyright (C) 2023-2025 Free Software Foundation, Inc.
@@ -20,7 +20,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docoBbeBZ.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docm1ipHi.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 beframe: isolate buffers per frame
 **********************************
@@ -107,7 +107,7 @@ Indices
 
 
 
-File: docoBbeBZ.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
+File: docm1ipHi.info,  Node: Overview,  Next: Assuming and unassuming buffers,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -164,7 +164,7 @@ frame-specific scratch buffer after the frame is deleted.  Set this user
 option to ‘nil’ to disable the killing of such buffers.
 
 
-File: docoBbeBZ.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
+File: docm1ipHi.info,  Node: Assuming and unassuming buffers,  Next: Features of beframe-mode,  Prev: Overview,  Up: Top
 
 2 Assuming and unassuming buffers
 *********************************
@@ -183,7 +183,7 @@ interface.
 * Unassuming buffers::
 
 
-File: docoBbeBZ.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
+File: docm1ipHi.info,  Node: Assuming buffers,  Next: Unassuming buffers,  Up: Assuming and unassuming buffers
 
 2.1 Assuming buffers
 ====================
@@ -231,7 +231,7 @@ the current frame.
      beframe-mode::).
 
 
-File: docoBbeBZ.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
+File: docm1ipHi.info,  Node: Unassuming buffers,  Prev: Assuming buffers,  Up: Assuming and unassuming buffers
 
 2.2 Unassuming buffers
 ======================
@@ -261,7 +261,7 @@ the current frame.
      expression is matched against the buffer name or major mode.
 
 
-File: docoBbeBZ.info,  Node: Features of beframe-mode,  Next: The Beframe keymap or transient user interface,  Prev: Assuming and unassuming buffers,  Up: Top
+File: docm1ipHi.info,  Node: Features of beframe-mode,  Next: The Beframe keymap or transient user interface,  Prev: Assuming and unassuming buffers,  Up: Top
 
 3 Features of ‘beframe-mode’
 ****************************
@@ -298,7 +298,7 @@ use Beframe’s commands.  Those are available on demand (*note The
 Beframe keymap: The Beframe keymap or transient user interface.).
 
 
-File: docoBbeBZ.info,  Node: The Beframe keymap or transient user interface,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
+File: docm1ipHi.info,  Node: The Beframe keymap or transient user interface,  Next: Installation,  Prev: Features of beframe-mode,  Up: Top
 
 4 The Beframe keymap or transient user interface
 ************************************************
@@ -325,7 +325,7 @@ example:
      (define-key global-map (kbd "C-c b") #'beframe-transient)
 
 
-File: docoBbeBZ.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap or transient user interface,  Up: Top
+File: docm1ipHi.info,  Node: Installation,  Next: Sample configuration,  Prev: The Beframe keymap or transient user interface,  Up: Top
 
 5 Installation
 **************
@@ -336,7 +336,7 @@ File: docoBbeBZ.info,  Node: Installation,  Next: Sample configuration,  Prev: T
 * Manual installation::
 
 
-File: docoBbeBZ.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
+File: docm1ipHi.info,  Node: GNU ELPA package,  Next: Manual installation,  Up: Installation
 
 5.1 GNU ELPA package
 ====================
@@ -355,7 +355,7 @@ archive.  Read:
 <https://protesilaos.com/codelog/2022-05-13-emacs-elpa-devel/>.
 
 
-File: docoBbeBZ.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
+File: docm1ipHi.info,  Node: Manual installation,  Prev: GNU ELPA package,  Up: Installation
 
 5.2 Manual installation
 =======================
@@ -382,7 +382,7 @@ following commands in a shell prompt:
    Everything is in place to set up the package.
 
 
-File: docoBbeBZ.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
+File: docm1ipHi.info,  Node: Sample configuration,  Next: Acknowledgements,  Prev: Installation,  Up: Top
 
 6 Sample configuration
 **********************
@@ -406,7 +406,7 @@ File: docoBbeBZ.info,  Node: Sample configuration,  Next: Acknowledgements,  Pre
 * Integration with Ibuffer::
 
 
-File: docoBbeBZ.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
+File: docm1ipHi.info,  Node: Integration with Consult,  Next: Integration with Ibuffer,  Up: Sample configuration
 
 6.1 Integration with Consult
 ============================
@@ -424,7 +424,7 @@ to a specific source.
 * Beframed buffers as the complete Consult buffer list::
 
 
-File: docoBbeBZ.info,  Node: Beframed buffers as a Consult buffer source,  Next: Beframed buffers as the complete Consult buffer list,  Up: Integration with Consult
+File: docm1ipHi.info,  Node: Beframed buffers as a Consult buffer source,  Next: Beframed buffers as the complete Consult buffer list,  Up: Integration with Consult
 
 6.1.1 Beframed buffers as a Consult buffer source
 -------------------------------------------------
@@ -465,7 +465,7 @@ which groups buffers by visibility, the first element of the list being
 the most recently selected buffer other than the current one.
 
 
-File: docoBbeBZ.info,  Node: Beframed buffers as the complete Consult buffer list,  Prev: Beframed buffers as a Consult buffer source,  Up: Integration with Consult
+File: docm1ipHi.info,  Node: Beframed buffers as the complete Consult buffer list,  Prev: Beframed buffers as a Consult buffer source,  Up: Integration with Consult
 
 6.1.2 Beframed buffers as the complete Consult buffer list
 ----------------------------------------------------------
@@ -484,8 +484,13 @@ a Consult buffer source::), it is possible to limit the
    Similar to ‘beframe-buffer-names’, the function ‘beframe-buffer-list’
 takes a keyword argument ‘:sort’, which we use to sort by visibility.
 
+   With this configuration, the command ‘consult-buffer’ only shows
+buffers from the current frame.  But it is still possible to widen it to
+all buffers by first typing ‘SPC’ at the empty prompt, which will
+activate the “hidden buffers” view.
+
 
-File: docoBbeBZ.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
+File: docm1ipHi.info,  Node: Integration with Ibuffer,  Prev: Integration with Consult,  Up: Sample configuration
 
 6.2 Integration with Ibuffer
 ============================
@@ -519,7 +524,7 @@ works:
          (memq buf (beframe-buffer-list))))
 
 
-File: docoBbeBZ.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
+File: docm1ipHi.info,  Node: Acknowledgements,  Next: GNU Free Documentation License,  Prev: Sample configuration,  Up: Top
 
 7 Acknowledgements
 ******************
@@ -537,7 +542,7 @@ Ideas and/or user feedback
      Derek Passen, Karan Ahlawat, Karthik Chikmagalur, Valentino, duli.
 
 
-File: docoBbeBZ.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
+File: docm1ipHi.info,  Node: GNU Free Documentation License,  Next: Indices,  Prev: Acknowledgements,  Up: Top
 
 8 GNU Free Documentation License
 ********************************
@@ -1019,7 +1024,7 @@ software license, such as the GNU General Public License, to permit
 their use in free software.
 
 
-File: docoBbeBZ.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
+File: docm1ipHi.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up: Top
 
 9 Indices
 *********
@@ -1031,7 +1036,7 @@ File: docoBbeBZ.info,  Node: Indices,  Prev: GNU Free Documentation License,  Up
 * Concept index::
 
 
-File: docoBbeBZ.info,  Node: Function index,  Next: Variable index,  Up: Indices
+File: docm1ipHi.info,  Node: Function index,  Next: Variable index,  Up: Indices
 
 9.1 Function index
 ==================
@@ -1064,7 +1069,7 @@ File: docoBbeBZ.info,  Node: Function index,  Next: Variable index,  Up: Indices
 * beframe-unassume-frame-buffers:        Unassuming buffers.   (line  9)
 
 
-File: docoBbeBZ.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
+File: docm1ipHi.info,  Node: Variable index,  Next: Concept index,  Prev: Function index,  Up: Indices
 
 9.2 Variable index
 ==================
@@ -1086,7 +1091,7 @@ File: docoBbeBZ.info,  Node: Variable index,  Next: Concept index,  Prev: Functi
                                                                (line 15)
 
 
-File: docoBbeBZ.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
+File: docm1ipHi.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 
 9.3 Concept index
 =================
@@ -1114,13 +1119,13 @@ Node: Sample configuration15129
 Node: Integration with Consult15830
 Node: Beframed buffers as a Consult buffer source16507
 Node: Beframed buffers as the complete Consult buffer list18355
-Node: Integration with Ibuffer19355
-Node: Acknowledgements20570
-Node: GNU Free Documentation License21104
-Node: Indices46447
-Node: Function index46623
-Node: Variable index48493
-Node: Concept index49540
+Node: Integration with Ibuffer19611
+Node: Acknowledgements20826
+Node: GNU Free Documentation License21360
+Node: Indices46703
+Node: Function index46879
+Node: Variable index48749
+Node: Concept index49796
 
 End Tag Table
 
