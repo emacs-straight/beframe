@@ -1,2 +1,2 @@
 ;; Generated package description from beframe.el  -*- mode: lisp-data; no-byte-compile: t -*-
-(define-package "beframe" "1.4.0.0.20250808.63627" "Isolate buffers per frame" '((emacs "28.1")) :commit "c8dfadc6cf23b0cfaa61c0bea62d44542620b4f6" :authors '(("Protesilaos Stavrou" . "info@protesilaos.com")) :maintainer '("Protesilaos Stavrou" . "info@protesilaos.com") :url "https://github.com/protesilaos/beframe")
+(define-package "beframe" "1.4.0.0.20251127.171120" "Isolate buffers per frame" '((emacs "28.1")) :commit "a04e8dca103780f82a90b86741c71302869af743" :authors '(("Protesilaos Stavrou" . "info@protesilaos.com")) :maintainer '("Protesilaos Stavrou" . "info@protesilaos.com") :url "https://github.com/protesilaos/beframe")
