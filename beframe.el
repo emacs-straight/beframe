@@ -284,15 +284,12 @@ more information."
   'beframe-buffer-names
   "0.2.0")
 
-(defun beframe--read-buffer-p (buffer &optional frame)
-  "Return non-nil if BUFFER belongs to the current FRAME.
-BUFFER is a string or a cons cell, per `beframe-read-buffer'.  If
-optional FRAME is nil, then default to the current one.  Else FRAME is
-an object that satisfies `framep'."
+(defun beframe--read-buffer-p (buffer buffers)
+  "Return non-nil if BUFFER belongs to the BUFFERS.
+BUFFER is a string or a cons cell whose `car' is the buffer name."
   (when (consp buffer)
     (setq buffer (car buffer)))
-  (unless (string-prefix-p " " buffer)
-    (seq-contains-p (beframe-buffer-names frame) buffer)))
+  (memq buffer buffers))
 
 (defvar beframe-history nil
   "Minibuffer history of frame specific buffers.")
@@ -306,12 +303,14 @@ empty string."
       (format "​%s " (propertize beframe-prompt-prefix 'face 'beframe-face-prompt-prefix))
     ""))
 
-(defun beframe-completion-table ()
-  "Return new completion table with `beframe-buffer-names'."
+(defun beframe-get-completion-table (candidates &rest metadata)
+  "Return completion table with CANDIDATES and METADATA.
+CANDIDATES is a list of strings.  METADATA is described in
+`completion-metadata'."
   (lambda (string pred action)
     (if (eq action 'metadata)
-        (list 'metadata '(category . buffer))
-      (complete-with-action action (beframe-buffer-names) string pred))))
+        (cons 'metadata metadata)
+      (complete-with-action action candidates string pred))))
 
 ;;;###autoload
 (defun beframe-read-buffer (prompt &optional def require-match _predicate)
@@ -319,14 +318,17 @@ empty string."
 PROMPT, DEF, REQUIRE-MATCH, and PREDICATE are the same as
 `read-buffer'.  The PREDICATE is ignored, however, to apply the
 per-frame filter."
-  (completing-read
-   (format "%s%s" (beframe--propertize-prompt-prefix) prompt)
-   (beframe-completion-table)
-   #'beframe--read-buffer-p
-   require-match
-   nil
-   'beframe-history
-   def))
+  (let* ((buffers (beframe-buffer-names))
+         (table (beframe-get-completion-table buffers '(category . buffer))))
+    (completing-read
+     (format "%s%s" (beframe--propertize-prompt-prefix) prompt)
+     table
+     (lambda (buffer)
+       (beframe--read-buffer-p buffer buffers))
+     require-match
+     nil
+     'beframe-history
+     def)))
 
 (defun beframe--buffer-prompt (&optional frame)
   "Prompt for buffer among `beframe-buffer-names'.
@@ -337,52 +339,39 @@ and previous buffers.
 
 With optional FRAME, use list of buffers specific to the given
 frame name."
-  (read-buffer
-   "Switch to frame buffer: "
-   (other-buffer (current-buffer))
-   (confirm-nonexistent-file-or-buffer)
-   ;; NOTE: This predicate is not needed if `beframe-mode' is
-   ;; non-nil because it sets the `read-buffer-function'.
-   (lambda (buf)
-     (beframe--read-buffer-p buf frame))))
-
-(defun beframe--buffers-with-current ()
-  "Return frame list with current one renamed appropriately."
-  (let ((frames (make-frame-names-alist)))
-    (mapcar
-     (lambda (frame)
-       (let ((name (car frame))
-             (obj (cdr frame))
-             (selected-frame (selected-frame)))
-         (cond
-          ((and (eq selected-frame obj)
-                (string-prefix-p " " name))
-           (setcar frame "Current frame")
-           frame)
-          ((eq selected-frame obj)
-           (setcar frame (format "%s (Current frame)" name))
-           frame)
-          (t
-           frame))))
-     frames)))
+  (let ((buffers (beframe-buffer-names frame)))
+    (read-buffer
+     "Switch to frame buffer: "
+     (other-buffer (current-buffer))
+     (confirm-nonexistent-file-or-buffer)
+     (lambda (buffer)
+       (beframe--read-buffer-p buffer buffers)))))
 
 (defun beframe--multiple-frames-p ()
   "Return non-nil if `frame-list' is longer than 1."
   (> (length (frame-list)) 1))
+
+(defun beframe-frame-prompt-annotate (frame-name)
+  "Return annotation for FRAME-NAME if it is the current one."
+  (when (string= frame-name (frame-parameter nil 'name))
+    (format " -- CURRENT FRAME")))
 
 (defun beframe--frame-prompt (&optional force)
   "Prompt to select a frame among the list of frames.
 Return user-error if `beframe--multiple-frames-p' is nil.  Skip
 this check if FORCE is non-nil."
   (if (or force (beframe--multiple-frames-p))
-      (let ((frames (beframe--buffers-with-current)))
-        (completing-read "Select Frame: " frames nil t nil 'frame-name-history (caar frames)))
+      (let ((frames (make-frame-names-alist)))
+        (completing-read
+         "Select Frame: "
+         (beframe-get-completion-table frames '(category . frame) '(annotation-function . beframe-frame-prompt-annotate))
+         nil t nil 'frame-name-history (caar frames)))
     (user-error "Only a single frame is available; aborting")))
 
 (defun beframe--frame-object (frame)
   "Retun frame object of named FRAME.
 FRAME is the human-readable representation of a frame."
-  (let* ((frames (beframe--buffers-with-current))
+  (let* ((frames (make-frame-names-alist))
          (names (mapcar #'car frames)))
     (when (seq-contains-p names frame #'string-match-p)
       (alist-get frame frames nil nil #'string-match-p))))
@@ -494,13 +483,13 @@ operation."
                               buffers))
                (`(,consolidated-buffers . ,action)
                 (pcase operation
-                  (:assume (cons (append new-buffers frame-buffers) "Assumed"))
+                  (:assume (cons (append new-buffers frame-buffers) "ASSUMED"))
                   (:unassume (cons
                               (seq-filter
                                (lambda (buf)
                                  (not (member buf new-buffers)))
                                frame-buffers)
-                              "Unassumed"))
+                              "UNASSUMED"))
                   (_ (error "`%s' is an unknown operation to modify frame buffers" operation)))))
     (if-let* ((lists (beframe--get-longest-list-first frame-buffers consolidated-buffers))
               (difference (seq-difference
@@ -509,7 +498,7 @@ operation."
         (progn
           (modify-frame-parameters nil `((buffer-list . ,consolidated-buffers)))
           (unless no-message
-            (message "%s current frame %s buffers: %s"
+            (message "Current frame %s %s buffers: %s"
                      (propertize action 'face 'error)
                      (propertize (format "%s" (length difference)) 'face 'warning)
                      (propertize (format "%s" difference) 'face 'success))))
