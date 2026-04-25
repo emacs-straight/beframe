@@ -38,10 +38,9 @@ Copyright (C) 2023-2026 Free Software Foundation, Inc.
      (a) The FSF’s Back-Cover Text is: “You have the freedom to copy and
      modify this GNU manual.”
 
-   This manual, written by Protesilaos Stavrou, describes the
-customization options for the Emacs package called ‘beframe’ (or
-‘beframe.el’), and provides every other piece of information pertinent
-to it.
+   This manual, written by Protesilaos, describes the customization
+options for the Emacs package called ‘beframe’ (or ‘beframe.el’), and
+provides every other piece of information pertinent to it.
 
    The documentation furnished herein corresponds to stable version
 1.5.0, released on 2026-02-04.  Any reference to a newer feature which
@@ -531,7 +530,7 @@ File: beframe.info,  Node: Acknowledgements,  Next: GNU Free Documentation Licen
 Beframe is meant to be a collective effort.  Every bit of help matters.
 
 Author/maintainer
-     Protesilaos Stavrou.
+     Protesilaos.
 
 Contributions to code or the manual
      Bruno Boal, Daniel Mendler, Edgar Vincent, Fritz Grabo, Stefan
@@ -1105,26 +1104,26 @@ File: beframe.info,  Node: Concept index,  Prev: Variable index,  Up: Indices
 
 Tag Table:
 Node: Top832
-Node: Overview3432
-Node: Assuming and unassuming buffers6333
-Node: Assuming buffers6890
-Node: Unassuming buffers9288
-Node: Features of beframe-mode10604
-Node: The Beframe keymap or transient user interface12379
-Node: Installation13544
-Node: GNU ELPA package13767
-Node: Manual installation14327
-Node: Sample configuration15098
-Node: Integration with Consult15797
-Node: Beframed buffers as a Consult buffer source16472
-Node: Beframed buffers as the complete Consult buffer list18318
-Node: Integration with Ibuffer19585
-Node: Acknowledgements20798
-Node: GNU Free Documentation License21355
-Node: Indices46495
-Node: Function index46669
-Node: Variable index48537
-Node: Concept index49582
+Node: Overview3424
+Node: Assuming and unassuming buffers6325
+Node: Assuming buffers6882
+Node: Unassuming buffers9280
+Node: Features of beframe-mode10596
+Node: The Beframe keymap or transient user interface12371
+Node: Installation13536
+Node: GNU ELPA package13759
+Node: Manual installation14319
+Node: Sample configuration15090
+Node: Integration with Consult15789
+Node: Beframed buffers as a Consult buffer source16464
+Node: Beframed buffers as the complete Consult buffer list18310
+Node: Integration with Ibuffer19577
+Node: Acknowledgements20790
+Node: GNU Free Documentation License21339
+Node: Indices46479
+Node: Function index46653
+Node: Variable index48521
+Node: Concept index49566
 
 End Tag Table
 
